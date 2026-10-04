@@ -1,0 +1,299 @@
+# Mechanical do-not patterns, checked by `check.py narrative`.
+# A hit means "look at this", not "rewrite it". Severity: hard -> error, high/med -> warning, low/soft -> info.
+# scope: "242", "244", "246" or "title" (Section A Line 200). Regexes are case-insensitive unless case_sensitive = true.
+# exclude: a hit is ignored when this regex matches within 60 characters of it.
+# Length limits, Section A fields, claim markers, dates after the fiscal year and the contractor statement are checked in code.
+# Judgment patterns that need a reviewer live in do-not.md.
+
+[[pattern]]
+id = "M-W01"
+regex = '\bcutting[- ]edge\b|\binnovative\b|\bnovel\b|\bbest[- ]in[- ]class\b|\bworld[- ]class\b|\bstate[- ]of[- ]the[- ]art\b|\bSOTA\b|\brevolutionary\b'
+scope = ["242", "244", "246", "title"]
+severity = "med"
+hint = "marketing superlative; give a specific technical description (for models: 'current commercial models')"
+
+[[pattern]]
+id = "M-W02"
+regex = '\bseamless\b|\brobust\b|\bscalable\b|\bquick\b|\bfast\b|\brapid\b|\befficient\b|\bcost[- ]effective\b'
+scope = ["242", "244", "246"]
+severity = "low"
+hint = "unquantified quality claim; state the measured characteristic"
+
+[[pattern]]
+id = "M-W03"
+regex = '\bcustomer requirements?\b|\bclient required\b|\bcompetitive\b|\bmarket demand\b|\breduce costs?\b|\bsales\b|\brevenue\b|\bprofit\b|\bROI\b|\bconversion rates?\b|\bCVR\b|\buplift\b|\bhigh[- ]performing\b|\bimprove (the )?(quality|performance)\b|\bimproved performance by\b'
+scope = ["242", "246"]
+severity = "high"
+hint = "business driver or metric; state the technical constraint or parameter ('marketing' as a domain noun is fine)"
+
+[[pattern]]
+id = "M-W03b"
+regex = '\bcustomer requirements?\b|\bclient required\b|\bcompetitive\b|\bmarket demand\b|\breduce costs?\b|\bsales\b|\brevenue\b|\bprofit\b|\bROI\b|\bconversion rates?\b|\bCVR\b|\buplift\b|\bhigh[- ]performing\b|\bimprove (the )?(quality|performance)\b|\bimproved performance by\b'
+scope = ["244"]
+severity = "med"
+hint = "business driver or metric; state the technical constraint or parameter"
+
+[[pattern]]
+id = "M-W04"
+regex = '\bsolutions?\b'
+exclude = 'no applicable solution|backend solution'
+scope = ["242", "244", "246"]
+severity = "low"
+hint = "name the specific implementation instead of 'solution'"
+
+[[pattern]]
+id = "M-W05"
+regex = '\bmigrat(e|ed|es|ing|ion|ions)\b|\bport(ed|ing)\b'
+scope = ["242", "244", "246", "title"]
+severity = "med"
+hint = "implies simple conversion; 're-architected', 'restructured', 'architectural transition'"
+
+[[pattern]]
+id = "M-W06"
+regex = '\bimplement(ed|ing|s)?\b'
+scope = ["244", "246"]
+severity = "med"
+hint = "reads as execution; 'investigated', 'tested', 'established' (one supporting-work sentence is acceptable)"
+
+[[pattern]]
+id = "M-W07"
+regex = '\b(we|the team) (developed|created|built|deployed)\b|\bbuilding\b'
+scope = ["244", "246"]
+severity = "low"
+hint = "'devised', 'formulated', 'tested'; acceptable for prior-year references and the supporting-work sentence"
+
+[[pattern]]
+id = "M-W08"
+regex = '\bapply(ing)?\b|\bapplied\b'
+scope = ["244", "246"]
+severity = "low"
+hint = "suggests using a known method; 'tested whether [technique] could ...'"
+
+[[pattern]]
+id = "M-W09"
+regex = '\btrial[- ]and[- ]error\b|\btweak(ed|ing)?\b|\btinker\w*|\bfine[- ]tun(e|ed|ing)\b'
+scope = ["242", "244", "246"]
+severity = "med"
+hint = "reads as unsystematic; name the independent variables that were varied"
+
+[[pattern]]
+id = "M-W10"
+regex = '\b(debug(ged|ging)?|bugs?|hot ?fix(es)?|fix(ed|es)?|patch(ed)?|incidents?|outages?|revert(ed)?|rollback)\b'
+exclude = 'rather than (from )?a single coding defect'
+scope = ["244", "246"]
+severity = "med"
+hint = "bug-fix language; frame as hypothesis, test and result"
+
+[[pattern]]
+id = "M-W11"
+regex = '\brevert chain\b|\b(pull requests?|PRs|commits|deploys?) (in|within) (a|one) (single )?day\b'
+scope = ["244"]
+severity = "high"
+hint = "incident-log counting; state what the deployment revealed and the hypothesis tested"
+
+[[pattern]]
+id = "M-W12"
+regex = '\b(did not|does not|didn.t) (document|address)\b|\bnot documented\b|\bundocumented\b|\bdocumentation (did not|does not)\b'
+scope = ["242"]
+severity = "med"
+hint = "a documentation gap is not a knowledge gap; 'no established method existed in the available knowledge base for ...'"
+
+[[pattern]]
+id = "M-W13"
+regex = '\bnot previously documented\b|\bpreviously unavailable\b|\bfirst[- ]ever\b|\bfirst in (the )?(field|industry|world)\b|\bnever before\b|\bunprecedented\b|\bno one (has|had)\b'
+scope = ["242", "244", "246"]
+severity = "high"
+hint = "novelty overclaim; 'not established in [named sources] at the outset for [class of systems]'"
+
+[[pattern]]
+id = "M-W14"
+regex = '\b(any|all|every) (system|platform|application|deployment)s?\b|\buniversal(ly)?\b|\bgenerali[sz]es? to all\b'
+scope = ["246"]
+severity = "med"
+hint = "universalizes beyond what was tested; name the class of systems and the tested bounds"
+
+[[pattern]]
+id = "M-W15"
+regex = '\bour (architecture|platform|system|technology base|knowledge|understanding|environment|implementation|constraints)\b|\badvanced our\b|\bin this (architecture|environment)\b|\bfor our architecture\b'
+scope = ["246"]
+severity = "high"
+hint = "company-scoped; phrase the advancement for a class of systems"
+
+[[pattern]]
+id = "M-W16"
+regex = '\b(held|without loss|parity|validated|proven|proved|guarantee[sd]?|fully autonomous)\b'
+scope = ["244", "246"]
+severity = "med"
+hint = "status overstatement; give the measured result and its acceptance criterion"
+
+[[pattern]]
+id = "M-W17"
+regex = '\bin production\b|\bproduction (use|traffic|data|failures?)\b|\blive (customers|traffic)\b|\bdeployed to production\b'
+scope = ["244", "246"]
+severity = "med"
+hint = "check accuracy and the commercial-production exclusion; state the real environment"
+
+[[pattern]]
+id = "M-W18"
+regex = '\bprompt (engineering|tuning|variations?|phrasing|iteration)\b|\biterat(ed|ing) on (the )?(prompts?|phrasing)\b|\btried (different|several|multiple) (prompts|models)\b|\bmodel (selection|choice)\b|\bswitched models\b'
+scope = ["242", "244", "246"]
+severity = "high"
+hint = "reported AI/ML disqualifier; frame the uncertainty at the system level"
+
+[[pattern]]
+id = "M-W19"
+regex = '\bwill\b|\bfuture (work|investigation)\b|\bnext phase\b|\bplanned\b|\broadmap\b|\bnot tested within\b'
+scope = ["244", "246"]
+severity = "med"
+hint = "forward-looking content is not work performed; delete"
+
+[[pattern]]
+id = "M-W20"
+regex = '^(During the course of|In|Throughout) the (tax|fiscal) year,? (we|the team) (executed|conducted|performed)'
+scope = ["244"]
+severity = "soft"
+hint = "boilerplate opener; keep at most one sentence, ideally carrying the contractor statement"
+
+[[pattern]]
+id = "M-W21"
+regex = '\bbest practices?\b|\bstandard practices?\b|\bwell[- ]known\b|\btextbook\b'
+scope = ["246"]
+severity = "med"
+hint = "known practice claimed as an advancement; state what standard practice did not predict"
+
+[[pattern]]
+id = "M-W22"
+regex = '\b(resolve|address|overcome) (the )?(new )?(technological )?uncertainties that (emerged|arose)\b'
+scope = ["242", "244", "246"]
+severity = "low"
+hint = "circular; state the uncertainty itself"
+
+[[pattern]]
+id = "M-W23"
+regex = '\bdrove advancement\b|\bgained new knowledge\b|\bsignificant(ly)? advanc\w*|\bbreakthrough\b|\bsuccessfully\b'
+scope = ["242"]
+severity = "med"
+hint = "Line 242 describes what was unknown, not achievements"
+
+[[pattern]]
+id = "M-W24"
+regex = '\bnaive\b|\bhacky\b|\bsimply\b|\bjust\b'
+scope = ["242", "244", "246"]
+severity = "low"
+hint = "informal; use the precise term"
+
+[[pattern]]
+id = "M-W25"
+regex = '\bcontext rot\b|\bSOTA\b'
+scope = ["242", "244", "246"]
+severity = "med"
+hint = "community slang; use the established term"
+
+[[pattern]]
+id = "M-W26"
+regex = '\b(found|discovered)\b'
+scope = ["246"]
+severity = "soft"
+hint = "optional: 'determined that', 'established that'"
+
+[[pattern]]
+id = "M-L13"
+regex = '\b\d{1,2}/50\b|\baudit score\b|\brisk (level|rating)\b|\bself-assess\w*|\bready for submission\b'
+scope = ["242", "244", "246", "title"]
+severity = "high"
+hint = "internal rubric language has no CRA status; keep it in working papers"
+
+[[pattern]]
+id = "M-S01"
+regex = '^At [A-Z][\w&.]*( [A-Z][\w&.]*)* we\b'
+case_sensitive = true
+scope = ["242"]
+severity = "med"
+hint = "first-person company intro; '[Company] develops ...'"
+
+[[pattern]]
+id = "M-S02"
+regex = '(?s)\A(?=.*\bwe\b)(?=.*\bthe team\b)'
+scope = ["242", "244", "246"]
+severity = "low"
+hint = "two voices in one line; pick one ('we' or 'the team')"
+
+[[pattern]]
+id = "M-S03"
+regex = '\bwe (develop|build|create|will|are)\b|\b(advances|achieves)\b'
+scope = ["244", "246"]
+severity = "med"
+hint = "use past tense for the work performed"
+
+[[pattern]]
+id = "M-S04"
+regex = '\b(can|could|may|might|potentially|possibly|not necessarily|appears? to)\b'
+scope = ["246"]
+severity = "med"
+hint = "hedged finding; make a definite statement bounded by the tested conditions"
+
+[[pattern]]
+id = "M-S05"
+regex = '\b(llm|api|json|sql|graphql|ai|cms|url)s?\b'
+case_sensitive = true
+scope = ["242", "244", "246"]
+severity = "low"
+hint = "write acronyms in upper case"
+
+[[pattern]]
+id = "M-S06"
+regex = '\b(?!and/or\b)[A-Za-z][\w-]*/[A-Za-z][\w-]*\b'
+exclude = 'https?://'
+scope = ["242", "244", "246"]
+severity = "low"
+hint = "note-style slash; write 'X and Y' or 'X or Y'"
+
+[[pattern]]
+id = "M-S07"
+regex = '\([^)]{3,}\)|(^|\s)\(?\d\)\s'
+scope = ["242", "244", "246"]
+severity = "soft"
+hint = "integrate parenthetical asides and inline 1) 2) lists into prose"
+
+[[pattern]]
+id = "M-S08"
+regex = '\b\d+\+'
+scope = ["242", "244", "246"]
+severity = "med"
+hint = "open-ended count; give the exact count or 'approximately N'"
+
+[[pattern]]
+id = "M-S09"
+regex = '["“][^"“”]{4,}["”]'
+scope = ["242", "244", "246"]
+severity = "med"
+hint = "quoted internal communication; paraphrase technically (quoted model outputs used as test evidence in 244 are fine)"
+
+[[pattern]]
+id = "M-S10"
+regex = '\b(\w+)\s+\1\b|\s,\w'
+scope = ["242", "244", "246"]
+severity = "med"
+hint = "proofing: doubled word or misplaced comma; re-run after every editor, including the accountant"
+
+[[pattern]]
+id = "M-S11"
+regex = '\b(were|was) determined\b'
+scope = ["246"]
+severity = "low"
+hint = "passive finding; 'we determined that ...'"
+
+[[pattern]]
+id = "M-S12"
+regex = '\bJSON formatted\b|\bmulti model\b|\battribution preserving\b'
+scope = ["242", "244", "246"]
+severity = "low"
+hint = "hyphenate compound modifiers"
+
+[[pattern]]
+id = "M-S14"
+regex = '#\d{2,5}\b|\b[A-Z]{2,8}-\d{1,5}\b|\b(?=[0-9a-f]*\d)[0-9a-f]{7,40}\b'
+case_sensitive = true
+scope = ["242", "244", "246"]
+severity = "soft"
+hint = "internal IDs (PRs, tickets, commits) belong in the evidence table, not the narrative"
