@@ -1,0 +1,2 @@
+Task ID,Task Name,Task Content,Status,Date Created,Date Closed,Assignees,Tags,List Name,Folder Name,Space Name
+86b1x,Tune gripper force loop,PID gains oscillated at 5 kHz,complete,1789052400000,,"[Alice Chen, Bob Roy]",research,Control,R&D,Robotics

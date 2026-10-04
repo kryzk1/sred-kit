@@ -1,0 +1,2 @@
+ID,Work Item Type,Title,Assigned To,State,Tags,Created Date,Created By,Changed Date,Closed Date,Area Path,Iteration Path
+4411,Task,Benchmark path planner on cluttered bins,Alice Chen <alice@acme.test>,Closed,research,12/01/2026 9:15:00 AM,Bob Roy <bob@acme.test>,12/09/2026 3:00:00 PM,12/09/2026 3:00:00 PM,Robotics\Planning,Sprint 9

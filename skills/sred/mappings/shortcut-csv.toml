@@ -1,0 +1,30 @@
+# Shortcut: Settings > Export Data > CSV (stories).
+tool = "shortcut"
+kind = "tracker"
+format = "csv"
+verified = false
+date_formats = ["iso", "%Y/%m/%d %H:%M:%S", "%Y-%m-%d %H:%M:%S"]
+key = "id"
+container = ["project", "epic", "workflow"]
+title = "name"
+tags = ["type", "state", "labels"]
+
+[[events]]
+kind = "issue_created"
+key_suffix = ""
+date = "created_at"
+actor = "requester"
+excerpt = "description"
+
+[[events]]
+kind = "issue_state_change"
+key_suffix = ":started"
+date = "started_at"
+actor = "owners"
+actor_split = ","
+
+[[events]]
+kind = "issue_resolved"
+date = "completed_at"
+actor = "owners"
+actor_split = ","
