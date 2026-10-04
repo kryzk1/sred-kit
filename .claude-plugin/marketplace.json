@@ -1,0 +1,11 @@
+{
+  "name": "sred-kit",
+  "owner": {"name": "sred-kit"},
+  "plugins": [
+    {
+      "name": "sred-kit",
+      "source": "./",
+      "description": "Turn a finished fiscal year into an SR&ED handoff package: T661 Part 2 narratives and an evidence-backed labour summary."
+    }
+  ]
+}
