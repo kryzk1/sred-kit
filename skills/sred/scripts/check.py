@@ -4,6 +4,7 @@
   check.py setup --claim DIR [--phase N]           what onboarding still needs; exit 1 if anything blocks phase N
   check.py narrative PATH [--claim DIR] [--evidence CSV] [--patterns TOML]
                                                    lengths, do-not patterns, claim markers, Section A; exit 1 on errors
+  check.py handoff --claim DIR                     handoff/ complete and consistent with scope and financials
 """
 from __future__ import annotations
 
@@ -12,7 +13,7 @@ import csv
 import sys
 from pathlib import Path
 
-from sredlib import config, narrative, setupcheck
+from sredlib import config, handoff, narrative, setupcheck
 
 ORDER = {"error": 0, "warning": 1, "info": 2}
 
@@ -53,6 +54,10 @@ def cmd_narrative(args) -> int:
     return print_findings(findings)
 
 
+def cmd_handoff(args) -> int:
+    return print_findings(handoff.check(Path(args.claim)))
+
+
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -66,6 +71,9 @@ def main(argv=None) -> int:
     nar.add_argument("--evidence")
     nar.add_argument("--patterns")
     nar.set_defaults(func=cmd_narrative)
+    h = sub.add_parser("handoff", help="check handoff/ for completeness and consistency")
+    h.add_argument("--claim", default=".")
+    h.set_defaults(func=cmd_handoff)
     args = p.parse_args(argv)
     return args.func(args)
 

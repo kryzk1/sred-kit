@@ -1,0 +1,154 @@
+"""Assemble handoff/ for the accountant and check it for consistency."""
+from __future__ import annotations
+
+import csv
+import re
+import shutil
+import tomllib
+from pathlib import Path
+
+from . import narrative
+from .narrative import LINES, Finding
+from .roster import load_roster
+
+EVIDENCE_INDEX_COLUMNS = ["project", "claim_id", "statement", "source_key", "raw_path", "verified"]
+REQUIRED = ["labour_summary.csv", "evidence_index.csv", "decision_log.md", "gaps.md", "README.md"]
+
+
+def load_projects(claim_dir) -> list[dict]:
+    path = Path(claim_dir) / "scope" / "projects.toml"
+    if not path.exists():
+        raise FileNotFoundError("scope/projects.toml not found: write it when scope is locked in Phase 3")
+    return tomllib.loads(path.read_text(encoding="utf-8")).get("project", [])
+
+
+def _rows(path) -> list[dict]:
+    path = Path(path)
+    if not path.exists():
+        return []
+    with path.open(newline="", encoding="utf-8-sig") as fh:
+        return list(csv.DictReader(fh))
+
+
+def _section(text: str, heading: str) -> str:
+    m = re.search(rf"(?ms)^## {re.escape(heading)}\s*$(.*?)(?=^## |\Z)", text)
+    return m.group(1).strip() if m else ""
+
+
+def _confirmed(s: dict | None):
+    if not s:
+        return None
+    v = (s.get("confirmed_pct") or "").strip().rstrip("%").strip()
+    return float(v) if v else None
+
+
+def build(claim_dir) -> list[str]:
+    claim_dir = Path(claim_dir)
+    out = claim_dir / "handoff"
+    out.mkdir(exist_ok=True)
+    written, index_rows = [], []
+    for p in load_projects(claim_dir):
+        pid = p["id"]
+        text = (claim_dir / "draft" / pid / "narrative.md").read_text(encoding="utf-8")
+        n = narrative.parse_narrative(text)
+        lengths = "; ".join(f"Line {line} {narrative.word_count(n.lines.get(line, ''))} words / "
+                            f"{narrative.line_count(n.lines.get(line, ''))} lines" for line in LINES)
+        body = narrative.strip_markers(text)
+        nl = body.find("\n")
+        body = body[: nl + 1] + f"\nLengths: {lengths}\n" + body[nl + 1:] if nl >= 0 else body
+        (out / f"T661-Part2-{pid}.md").write_text(body, encoding="utf-8")
+        written.append(f"T661-Part2-{pid}.md")
+        cited = {cid for line in LINES for cid in narrative.MARKER_ID_RE.findall(n.lines.get(line, ""))}
+        for row in _rows(claim_dir / "draft" / pid / "evidence_table.csv"):
+            if row.get("claim_id") in cited:
+                index_rows.append({"project": pid, **{k: row.get(k, "") for k in EVIDENCE_INDEX_COLUMNS[1:]}})
+    with (out / "evidence_index.csv").open("w", newline="", encoding="utf-8") as fh:
+        writer = csv.DictWriter(fh, fieldnames=EVIDENCE_INDEX_COLUMNS, lineterminator="\n")
+        writer.writeheader()
+        writer.writerows(index_rows)
+    written.append("evidence_index.csv")
+    labour = claim_dir / "financials" / "labour_summary.csv"
+    if labour.exists():
+        shutil.copy2(labour, out / "labour_summary.csv")
+        written.append("labour_summary.csv")
+    state_path = claim_dir / "STATE.md"
+    state = state_path.read_text(encoding="utf-8") if state_path.exists() else ""
+    (out / "decision_log.md").write_text("# Decision log\n\n" + (_section(state, "Locked decisions") or "(none recorded)") + "\n", encoding="utf-8")
+    written.append("decision_log.md")
+    gaps = out / "gaps.md"
+    if not gaps.exists():
+        flags = [f"- {r['person']}: {r['flags']}" for r in _rows(claim_dir / "financials" / "person_summary.csv") if r.get("flags")]
+        gaps.write_text("# Gaps and follow-ups\n\n## Open questions\n\n" + (_section(state, "Open questions for the claimant") or "(none)")
+                        + "\n\n## Financial flags\n\n" + ("\n".join(flags) or "(none)") + "\n", encoding="utf-8")
+        written.append("gaps.md")
+    return written
+
+
+def _names(value: str) -> list[str]:
+    out = []
+    for part in (value or "").split(";"):
+        name = re.sub(r"\(.*?\)", "", part).strip()
+        if name and name.lower() not in ("none", "n/a"):
+            out.append(name)
+    return out
+
+
+def check(claim_dir) -> list[Finding]:
+    claim_dir = Path(claim_dir)
+    out = claim_dir / "handoff"
+    findings: list[Finding] = []
+
+    def add(severity, rule, where, message):
+        findings.append(Finding(severity, rule, where, message))
+
+    try:
+        projects = load_projects(claim_dir)
+    except FileNotFoundError as exc:
+        return [Finding("error", "HANDOFF", "scope", str(exc))]
+    for name in REQUIRED + [f"T661-Part2-{p['id']}.md" for p in projects]:
+        if not (out / name).exists():
+            add("error", "HANDOFF", "handoff", f"missing {name}")
+    for p in projects:
+        t661 = out / f"T661-Part2-{p['id']}.md"
+        if t661.exists() and narrative.MARKER_ID_RE.search(t661.read_text(encoding="utf-8")):
+            add("error", "HANDOFF", p["id"], "claim markers left in handoff text")
+    roster = load_roster(claim_dir / "roster.csv")
+    lookup = {r["name"].strip().lower(): r for r in roster} | {r["id"].lower(): r for r in roster}
+    summary = {s["person"]: s for s in _rows(claim_dir / "financials" / "person_summary.csv")}
+    named, named_contractors = set(), set()
+    for p in projects:
+        pid = p["id"]
+        npath = claim_dir / "draft" / pid / "narrative.md"
+        if not npath.exists():
+            add("error", "HANDOFF", pid, "draft narrative missing")
+            continue
+        n = narrative.parse_narrative(npath.read_text(encoding="utf-8"))
+        expect = {"200": p.get("title", ""), "202": p.get("start", ""), "204": p.get("end", ""), "206": p.get("field_code", "")}
+        for line, value in expect.items():
+            if str(value) and n.section_a.get(line, "") != str(value):
+                add("error", "CONSIST", pid, f"Section A Line {line} is {n.section_a.get(line, '')!r} but scope/projects.toml says {str(value)!r}")
+        if "continuation" in p and narrative.yes(n.section_a.get("208", "")) != bool(p["continuation"]):
+            add("error", "CONSIST", pid, "Line 208 (continuation) disagrees with scope/projects.toml")
+        for label, bucket in (("key individuals", named), ("contractors", named_contractors)):
+            for name in _names(n.section_c.get(label, "")):
+                r = lookup.get(name.lower())
+                if r is None:
+                    add("error", "CONSIST", pid, f"Section C names {name!r}, who is not in roster.csv")
+                    continue
+                bucket.add(r["id"])
+                pct = _confirmed(summary.get(r["id"]))
+                if pct is not None and pct <= 0:
+                    add("error", "CONSIST", pid, f"{name} is named in Section C but has 0% SR&ED time")
+    for pid, s in summary.items():
+        pct = _confirmed(s)
+        if pct is None:
+            add("error", "CONSIST", "financials", f"{pid}: SR&ED % is not confirmed")
+        elif pct > 0 and pid not in named | named_contractors:
+            add("warning", "CONSIST", "financials", f"{pid} is claimed at {pct}% but not named in any project's Section C")
+    contractor_ids = {r["id"] for r in roster if r["classification"] == "contractor"}
+    for cid in sorted(named_contractors - contractor_ids):
+        add("error", "CONSIST", "draft", f"{cid} is listed under Section C contractors but is an employee in roster.csv")
+    for cid in sorted(contractor_ids - named_contractors):
+        if (_confirmed(summary.get(cid)) or 0) > 0:
+            add("warning", "CONSIST", "financials", f"contractor {cid} is claimed but not listed under Section C contractors")
+    return findings
