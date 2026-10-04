@@ -49,7 +49,7 @@ sred-kit/
     sred/
       SKILL.md                    phase router, hard rules, resume procedure
       references/
-        01-setup.md
+        01-setup.md               onboarding question bank: wording, help, validation, destination
         02-capture.md
         03-discover-scope.md
         04-draft.md
@@ -65,7 +65,7 @@ sred-kit/
       scripts/
         capture.py                github | gitlab | linear | jira | git-log
         index.py                  build | import | validate
-        check.py                  narrative | handoff
+        check.py                  setup | narrative | handoff
         time_basis.py             ledger aggregation, gap months, person summary, labour summary
       templates/
         sred.toml
@@ -87,7 +87,8 @@ Scripts use Python 3.11+ standard library only (config is TOML because `tomllib`
 
 ```
 FY<year>/
-  sred.toml                company, fiscal year, prior filings, sources, classification rules, optional rates
+  sred.toml                company, fiscal year, eligibility, sources, classification rules, optional rates
+  prior/                   prior T661 filings
   roster.csv               people, aliases, pay, employee/contractor, flags
   STATE.md                 phase, locked decisions, open questions, next action
   evidence/
@@ -134,12 +135,31 @@ Rules:
 
 Each phase has a reference file loaded only when that phase runs. Phase 6 can run alongside Phases 4–5 once Phase 3 is locked.
 
-### Phase 1: Setup
+### Phase 1: Onboarding and setup
 
-- **Inputs:** claimant answers; prior T661 filings (PDF); payroll and contractor figures.
-- **Produces:** `sred.toml`, `roster.csv`, `STATE.md`, folder skeleton.
-- **Checks:** fiscal year dates; each source has a method; credentials present for `api` sources; export files present for `export` sources; prior filings present (otherwise logged as first claim); Slack plan warning (free plans hide history older than 90 days).
-- **Gate:** config and roster complete; claimant confirms.
+A guided interview that collects everything later phases need, so nothing stalls mid-run for missing information. Triggered by "set up a new SR&ED claim" or `/sred setup` in an empty folder.
+
+**How it runs**
+- Questions come in five short batches (below). Choices use multiple-choice prompts; everything else is free text.
+- **Documents instead of typing:** the claimant can hand over a payroll export, prior T661 filings, contractor invoices, contracts, or the accountant's labour template, and Claude extracts the answers, then shows what it extracted for confirmation.
+- **"I don't know yet" is allowed.** The item is logged in `STATE.md` as an open question tagged with the phase it blocks. Onboarding finishes when everything Phase 2 needs is present; items needed later block only their own phase.
+- **Resumable:** progress is saved to `STATE.md` after every batch.
+- **Live checks** at the end: one test call per `api` source with the given credentials; export files parse with their mapping; fiscal-year dates are valid; the filing deadline (fiscal year end + 18 months) is computed and shown.
+- **Completeness check:** `check.py setup --claim <dir>` lists every missing required field and the phase it blocks. It runs at the end of onboarding and at the start of every later phase.
+- **Confirmation:** a one-page summary of everything captured, which the claimant approves.
+
+**Question bank** (full wording, help text and validation live in `references/01-setup.md`)
+
+| Batch | Asks for | Why it matters | Lands in | Needed by |
+|---|---|---|---|---|
+| A. Company and claim | Legal name; CCPC status; fiscal year start and end; provinces of operation; first claim or continuation; prior T661 filings; field-of-science codes used before | Fiscal window, ITC estimate rate, prior-year demarcation, Section A | `sred.toml`, prior filings copied to `prior/` | 2, 3 |
+| A. Company and claim | Accountant or preparer name and firm; their labour-summary template if they have one; target handoff date; claim preparer details and whether a paid third party is involved | Output format, scheduling against the deadline, Section C | `sred.toml`, `templates/labour-summary-columns.csv` override | 6, 7 |
+| B. Eligibility basics | Government assistance received (e.g. IRAP, grants); work performed for clients under contract; work funded by others; work performed outside Canada | These reduce or exclude expenditures and change what can be claimed | `sred.toml` `[eligibility]`, flagged for the accountant | 3, 6 |
+| C. People | Every employee and contractor active in the year: name, role, employee or contractor, start and end dates, works in Canada, 10%+ shareholder or related to one, tool handles or email; employees: paid hours, wages paid and earned, bonus, taxable benefits, pay in lieu; contractors: company, arm's length, invoiced amount in the year, contract provided, SR&ED mentioned in the contract | Identity matching, time basis, labour summary, accountant flags | `roster.csv` | 2 (identity), 6 (pay) |
+| D. Tools | Code host(s) and repos or org; issue tracker; chat; meetings; docs; anything else. For each: method (`api`, `export`, `connector`, `git-log`), credentials or export file, **subscription end date**, plan tier (Slack free hides history older than 90 days), issue-key format | Capture method and urgency; data that is about to disappear is captured first | `sred.toml` `[[sources]]` | 2 |
+| E. Context and preferences | What the company builds; the efforts the team found technically hard this year; experiments abandoned; work to exclude; who ratifies decisions; default scenario preference; ITC estimate rates (defaults shown, marked "verify current rates") | Seeds discovery (treated as leads to verify against evidence, never as evidence); names the decision owner | `scope/claimant_context.md`, `sred.toml`, `STATE.md` | 3 |
+
+- **Gate:** `check.py setup` reports nothing missing for Phase 2; live checks pass; claimant approves the summary.
 
 ### Phase 2: Capture
 
@@ -269,6 +289,9 @@ Two fresh subagents per round, neither of which sees the drafting conversation o
 - `index.py validate --claim <dir>`: column set, key uniqueness, date within fiscal year, person resolution, `raw_path` exists.
 
 ### 6.3 `check.py`
+- `check.py setup --claim <dir>`
+  - Validates `sred.toml` and `roster.csv` against the question bank's required fields and lists each missing field with the phase it blocks.
+  - Exit code non-zero if anything required by the current phase is missing.
 - `check.py narrative <narrative.md> --evidence <evidence_table.csv>`
   - Word counts per line against limits (242: 350, 244: 700, 246: 350), excluding markers.
   - Mechanical patterns from `do-not-patterns.toml` (id, regex, scope, severity, replacement hint).
@@ -305,10 +328,11 @@ Two fresh subagents per round, neither of which sees the drafting conversation o
    - Checker on the reference claimant's final FY2025 text catches what the accountant changed before filing.
    - Discovery on FY2026 raw evidence finds every theme actually claimed; extra findings are listed as upside.
    - Proposed % per person compared with the FY2026 claimant-entered %; every gap explained.
-3. **Fresh-session dry run** on `examples/acme/`, which deliberately uses a different stack from the reference claimant (GitLab, Jira, Slack export), so the run proves portability while the backtest covers GitHub and Linear. A new Claude session with only the kit runs all seven phases. The session is killed mid-phase and must resume from `STATE.md` alone. Skills are written test-first: record the failure without the skill, then show the skill fixes it.
-4. **Leak check:** grep over `skills/`, `examples/`, `templates/` and `tests/fixtures/` for the reference claimant's name, org, repo names, issue prefix, people's names, addresses and wage figures finds nothing.
+3. **Onboarding test:** a scripted claimant (fixture answers, including two "I don't know yet" items and a payroll export to extract from) completes onboarding in an empty folder. `check.py setup` must then report exactly the two deferred items, each tagged with the phase it blocks.
+4. **Fresh-session dry run** on `examples/acme/`, which deliberately uses a different stack from the reference claimant (GitLab, Jira, Slack export), so the run proves portability while the backtest covers GitHub and Linear. A new Claude session with only the kit runs all seven phases. The session is killed mid-phase and must resume from `STATE.md` alone. Skills are written test-first: record the failure without the skill, then show the skill fixes it.
+5. **Leak check:** grep over `skills/`, `examples/`, `templates/` and `tests/fixtures/` for the reference claimant's name, org, repo names, issue prefix, people's names, addresses and wage figures finds nothing.
 
-**Done when** all four pass and the dry run produces a complete handoff package without manual fixes.
+**Done when** all five pass and the dry run produces a complete handoff package without manual fixes.
 
 ## 9. Out of scope
 
