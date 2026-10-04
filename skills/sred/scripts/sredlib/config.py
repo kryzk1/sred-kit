@@ -57,7 +57,7 @@ def limits(cfg: dict) -> dict:
     for key in ("words", "lines"):
         for line, val in (user.get(key) or {}).items():
             out[key][str(line)] = int(val)
-    if "mode" in user:
+    if user.get("mode"):  # blank until onboarding asks the preparer; the form's word limits apply meanwhile
         out["mode"] = user["mode"]
     if "line_width" in user:
         out["line_width"] = int(user["line_width"])

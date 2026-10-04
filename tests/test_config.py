@@ -76,3 +76,8 @@ chat_message = 0.5
     assert config.rates(cfg) == {"itc_rate": 0.35}
     assert config.kind_weights(cfg) == {"chat_message": 0.5}
     assert config.resolve_path(cfg, "prior/a.pdf") == claim / "prior/a.pdf"
+
+
+def test_blank_limits_mode_falls_back_to_words(make_claim):
+    lim = config.limits(config.load_config(make_claim('[limits]\nmode = ""\n') / "sred.toml"))
+    assert lim["mode"] == "words"
