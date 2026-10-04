@@ -59,9 +59,12 @@ sred-kit/
         do-not.md                 judgment patterns (generic statements, generic examples)
         do-not-patterns.toml      mechanical patterns read by check.py
         t661-fields.md            Section A/B/C field guide
+        adding-a-source.md        mapping-file format and connector path
+      mappings/                   export presets: jira-csv, linear-csv, asana-csv, clickup-csv,
+                                  shortcut-csv, azure-devops-csv, slack-export
       scripts/
-        capture.py                github | linear
-        index.py                  build | validate
+        capture.py                github | gitlab | linear | jira | git-log
+        index.py                  build | import | validate
         check.py                  narrative | handoff
         time_basis.py             ledger aggregation, gap months, person summary, labour summary
       templates/
@@ -71,7 +74,7 @@ sred-kit/
         labour-summary-columns.csv
     sred-audit/
       SKILL.md                    unchanged copy
-  examples/acme/                  fictional, filled claim folder for the dry run
+  examples/acme/                  fictional claim folder on a different stack (GitLab, Jira, Slack export)
   tests/
     fixtures/                     recorded and synthetic inputs, no real company data
     backtest/local.toml           gitignored; points at a real claimant's private history
@@ -135,31 +138,40 @@ Each phase has a reference file loaded only when that phase runs. Phase 6 can ru
 
 - **Inputs:** claimant answers; prior T661 filings (PDF); payroll and contractor figures.
 - **Produces:** `sred.toml`, `roster.csv`, `STATE.md`, folder skeleton.
-- **Checks:** fiscal year dates; `gh auth status`; API keys present for configured sources; prior filings present (otherwise logged as first claim); Slack plan warning (free plans hide history older than 90 days).
+- **Checks:** fiscal year dates; each source has a method; credentials present for `api` sources; export files present for `export` sources; prior filings present (otherwise logged as first claim); Slack plan warning (free plans hide history older than 90 days).
 - **Gate:** config and roster complete; claimant confirms.
 
 ### Phase 2: Capture
 
-| Source | Method |
-|---|---|
-| GitHub (required) | `capture.py github`: PRs (bodies, reviews, comments), commits (full 40-char IDs), per configured org/repos, fiscal year window |
-| Linear | `capture.py linear`: issues incl. archived, descriptions, comments, state histories, projects, relations (GraphQL; `LINEAR_API_KEY`) |
-| Slack | Official workspace export ZIP (preferred) or connector, saved as raw JSON |
-| Jira, Notion, Granola, other | Connector or official export, saved raw; meeting summaries marked `weight=summary` because they are not verbatim |
-| Local git (GitLab/Bitbucket) | `git log` on local clones; commits only |
+**Sources are pluggable.** Each source in `sred.toml` declares `kind` (`code | tracker | chat | meetings | docs`), `tool`, and `method`. Nothing downstream of `activity.csv` knows which tool a row came from, so switching tools never changes Phases 3–7.
 
-`index.py build` converts GitHub, Linear and Slack-export raw files into `evidence/index/activity.csv`. For other sources Claude writes rows in the same format, then `index.py validate` checks them.
+| Method | How it works | Built in for |
+|---|---|---|
+| `api` | `capture.py <tool>` pulls raw records with the tool's API or CLI | GitHub (`gh`), GitLab (REST, token), Linear (GraphQL), Jira Cloud (REST, including changelog) |
+| `export` | The tool's own export file is the raw record; `index.py import --mapping <file>` converts it | Mapping presets: Jira CSV, Linear CSV, Asana CSV, ClickUp CSV, Shortcut CSV, Azure DevOps CSV, Slack export ZIP |
+| `connector` | Claude pulls through an MCP connector, saves raw JSON, writes activity rows; `index.py validate` checks them | Any tool with a connector (Notion, Confluence, Granola, Teams, Monday, and others) |
+| `git-log` | `capture.py git-log` over local clones | Any git host (Bitbucket, Azure Repos, self-hosted); commits only |
 
-**`activity.csv` columns:** `source, key, kind, person, actor_raw, date, timestamp, title, excerpt, refs, url, raw_path, weight`
+- **Code history is required**, because the time basis depends on it: any `api` code host or `git-log`. Trackers, chat and meetings are optional, but they raise the claim: they evidence uncertainty and iteration, and they fill gap months for people with thin code trails.
+- **Adding an unsupported tool needs no code.** A mapping file is about 15 lines of TOML: the export's columns mapped to `activity.csv` fields, and which activity kinds each export row yields (for example, one Jira CSV row yields `issue_created`, `issue_resolved` and one `issue_comment` per comment column). Claude drafts the mapping from the export's header row; `index.py import` and `validate` check it. `references/adding-a-source.md` documents the mapping format and the connector path in one page.
+- **Raw-first applies to every method:** the export file or connector JSON is saved under `evidence/raw/<source>/` and recorded in the manifest before any conversion.
+- Meeting summaries and other non-verbatim records are marked `weight=summary`.
 
-- `key`: durable ID (`repo#123`, full commit SHA, issue identifier, Slack `channel:ts`, meeting ID). Unique per row.
-- `kind`: `commit, pr_opened, pr_merged, pr_review, pr_comment, issue_created, issue_state_change, issue_assigned, issue_comment, chat_message, meeting, doc_edit`.
+`index.py build` converts all `api` and `git-log` raw files and every source with a configured mapping into `evidence/index/activity.csv`.
+
+**`activity.csv` columns:** `source, key, kind, person, actor_raw, date, timestamp, container, tags, paths, title, excerpt, refs, url, raw_path, weight`
+
+- `key`: durable ID (`repo#123`, full 40-char commit SHA, issue identifier, chat `channel:ts`, meeting ID). Unique per row.
+- `kind`: `commit, pr_opened, pr_merged, pr_review, pr_comment, issue_created, issue_state_change, issue_resolved, issue_assigned, issue_comment, chat_message, meeting, doc_edit`.
 - `person`: roster ID, `bot`, or `unmatched:<raw>`.
+- `container`: repo, tracker project, or channel.
+- `tags`: labels, branch name, issue type; semicolon-separated.
+- `paths`: changed file paths for commits and PRs; semicolon-separated, truncated at 50.
 - `excerpt`: verbatim, at most 500 characters, truncation marked.
-- `refs`: semicolon-separated keys found in the row (issue keys in branch names and PR titles via the configured regex, PR URLs in chat).
+- `refs`: semicolon-separated keys found in the row, using each tracker's `issue_key_regex` from `sred.toml` (for example `[A-Z]+-\d+` for Jira, `#\d+` for GitHub issues).
 - `weight`: `verbatim` or `summary`.
 
-**Identity resolution:** `roster.csv` aliases (`gh:`, `slack:`, `linear:`, `email:`) map actors to people. Unmatched non-bot actors go to `identities_unmatched.csv`.
+**Identity resolution:** `roster.csv` aliases use `<tool>:<id>` (for example `github:jdoe`, `jira:5b10ac8d`, `slack:U123`), with email as the default join key because most tools expose it. Unmatched non-bot actors go to `identities_unmatched.csv`.
 
 - **Gate:** manifest counts reviewed by the claimant; unmatched identities resolved or marked external/bot; claimant confirms a backup copy of `evidence/raw/` exists.
 
@@ -211,7 +223,7 @@ Two fresh subagents per round, neither of which sees the drafting conversation o
 ### Phase 6: Financials
 
 1. **Ledger** (`financials/activity_ledger.csv`): activity rows plus `project, level (direct|support|none), category (routine|support|business|admin), classified_by (rule:<id>|claude|claimant), confidence, reason`.
-   - Pass 1: classification rules from `sred.toml` (repo, path glob, branch or label regex → project).
+   - Pass 1: classification rules from `sred.toml`. Rules match on tool-neutral columns (`source`, `container`, `tags`, `paths` glob, `title` regex) and assign a project and level.
    - Pass 2: Claude classifies the remainder and writes `financials/classification_overrides.csv`. Rows below `review_threshold` (default 0.7, set in `sred.toml`) are queued for the claimant.
    - `time_basis.py` merges rules and overrides; it never calls an LLM.
 2. **Time basis** (`financials/time_basis.csv`): `person, month, evidence_days, sred_days, share, by_project, gap`.
@@ -247,12 +259,13 @@ Two fresh subagents per round, neither of which sees the drafting conversation o
 ## 6. Scripts
 
 ### 6.1 `capture.py`
-- `capture.py github --config sred.toml --out evidence/raw/github/`
-- `capture.py linear --config sred.toml --out evidence/raw/linear/`
-- Writes raw JSON and appends to `MANIFEST.json`. Idempotent: reruns overwrite the same files.
+- `capture.py <github|gitlab|linear|jira|git-log> --config sred.toml --source <name> --out evidence/raw/<name>/`
+- Each tool is one small module behind the same interface: fetch raw records for the fiscal-year window, write raw JSON, append to `MANIFEST.json`. Idempotent: reruns overwrite the same files.
+- Credentials come from environment variables named in `sred.toml` (for example `GITLAB_TOKEN`, `JIRA_EMAIL` + `JIRA_TOKEN`, `LINEAR_API_KEY`); `gh` uses its own auth.
 
 ### 6.2 `index.py`
-- `index.py build --claim <dir>`: converts GitHub, Linear and Slack-export raw files to `activity.csv`, resolves identities.
+- `index.py build --claim <dir>`: converts every `api` and `git-log` source, plus every source with a mapping, to `activity.csv`; resolves identities.
+- `index.py import --claim <dir> --source <name> --mapping <file>`: converts one export file using a mapping (preset or custom) and reports unmapped columns and rows that failed to parse.
 - `index.py validate --claim <dir>`: column set, key uniqueness, date within fiscal year, person resolution, `raw_path` exists.
 
 ### 6.3 `check.py`
@@ -286,12 +299,13 @@ Two fresh subagents per round, neither of which sees the drafting conversation o
 1. **Script tests** (pytest, fixtures only, no network)
    - `check.py`: reproduces known word counts (421 and 840 from a fixture draft); flags every mechanical pattern; passes a clean fixture.
    - `time_basis.py`: synthetic ledgers covering mixed days, gap months under each scenario, identical-% flag, employee-and-contractor person, payroll mismatch; byte-identical reruns.
-   - `capture.py` / `index.py`: recorded GitHub and Linear fixtures produce valid `activity.csv`; 40-char SHAs; bots excluded.
+   - `capture.py` / `index.py`: recorded fixtures for each `api` adapter (GitHub, GitLab, Linear, Jira) and each mapping preset produce valid `activity.csv`; 40-char SHAs; bots excluded.
+   - A custom mapping written from scratch for a tool with no preset (fixture: a Trello JSON export) imports and validates, proving the no-code path.
 2. **Backtest** (`tests/backtest/local.toml`, gitignored, real data stays local)
    - Checker on the reference claimant's final FY2025 text catches what the accountant changed before filing.
    - Discovery on FY2026 raw evidence finds every theme actually claimed; extra findings are listed as upside.
    - Proposed % per person compared with the FY2026 claimant-entered %; every gap explained.
-3. **Fresh-session dry run** on `examples/acme/`: a new Claude session with only the kit runs all seven phases. The session is killed mid-phase and must resume from `STATE.md` alone. Skills are written test-first: record the failure without the skill, then show the skill fixes it.
+3. **Fresh-session dry run** on `examples/acme/`, which deliberately uses a different stack from the reference claimant (GitLab, Jira, Slack export), so the run proves portability while the backtest covers GitHub and Linear. A new Claude session with only the kit runs all seven phases. The session is killed mid-phase and must resume from `STATE.md` alone. Skills are written test-first: record the failure without the skill, then show the skill fixes it.
 4. **Leak check:** grep over `skills/`, `examples/`, `templates/` and `tests/fixtures/` for the reference claimant's name, org, repo names, issue prefix, people's names, addresses and wage figures finds nothing.
 
 **Done when** all four pass and the dry run produces a complete handoff package without manual fixes.
@@ -301,7 +315,7 @@ Two fresh subagents per round, neither of which sees the drafting conversation o
 - T661 Part 3 expenditures, the ITC calculation, Schedule 31, provincial credits, proxy-method and specified-employee computations (the accountant's job).
 - Filing.
 - Mid-year or contemporaneous capture.
-- GitLab/Bitbucket API capture (local `git log` only).
+- Bitbucket and Azure DevOps API capture (`git-log` plus exports cover them).
 - Generating the accountant's Word document (handoff text is ready to paste).
 - Non-Canadian R&D programs.
 
@@ -312,6 +326,7 @@ Two fresh subagents per round, neither of which sees the drafting conversation o
 | Skill structure | One `sred` skill with per-phase references, plus existing `sred-audit` | Shared rules in one place; phases load only when needed |
 | `sred-submission` | Retired, replaced by `sred` | It reflects an older Linear/Slack-only process |
 | Config format | TOML | Python standard library reads it; no dependencies |
+| Source support | Four API adapters (GitHub, GitLab, Linear, Jira), seven export presets, mapping files for anything else, connectors as fallback | Covers the common stacks with little code; any other tool needs only a mapping file |
 | Time-basis unit | Evidence-day, fractional split | Commit counts reward frequent small commits |
 | Gap months | Scenario-dependent (0% conservative; claimant basis in maximum) | Supports claim maximization while keeping the conservative view visible |
 | Approval gate | Red-team triage, not audit score | Self-scores were inflated in practice |
