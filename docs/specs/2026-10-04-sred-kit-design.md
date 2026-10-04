@@ -360,3 +360,16 @@ Two fresh subagents per round, neither of which sees the drafting conversation o
 ## 11. Next step
 
 Write the implementation plan (writing-plans skill). Skills are built with the writing-skills approach (baseline failure first).
+
+## 12. Interface details (added during planning)
+
+These refine §3–§8 so the implementation plan and this spec agree.
+
+- **Five scripts, not four.** `handoff.py build` assembles `handoff/` deterministically (strips claim markers, states lengths, builds `evidence_index.csv` from cited markers, copies the labour summary, extracts the decision log from `STATE.md`). `check.py handoff` validates it.
+- **Company time zone.** `[company] timezone` (IANA name, e.g. `America/Toronto`, default UTC). Activity `date` and fiscal-year filtering use the company's local date; `timestamp` stays UTC. A late-evening commit on the last day of the fiscal year belongs to that year.
+- **Locked project list.** Phase 3 writes `scope/projects.toml`: one `[[project]]` per project with `id`, `title`, `start`, `end`, `continuation`, `field_code`. `check.py handoff` compares narratives against it.
+- **Narrative file format** (`draft/<P>/narrative.md`): `# <P>: <title>`; `## Section A` with items `- 200 Project title: …`, `- 202 Start date: YYYY-MM-DD`, `- 204 Completion date: YYYY-MM-DD`, `- 206 Field of science code: 2.02.09`, `- 208 Continuation: yes|no`, `- 210 First claim: yes|no`; `## Line 242`, `## Line 244`, `## Line 246` as plain prose; `## Section C` with items `- Key individuals: Name (role); …`, `- Contractors: Name (company); …` or `none`, `- Prepared by: …`, `- Evidence: …`. Claim markers `[C12]` go before a sentence's closing punctuation.
+- **Classification levels:** `direct | support | borderline | none`. Conservative counts `direct`; balanced adds `support`; maximum adds `borderline`. Conservative also ignores `weight=summary` rows.
+- **Config keys used by scripts:** `[claim] scenario, first_claim, prior_filings, prior_titles, field_codes, prior_projects`; `[payroll] total_wages_earned`; `[time_basis.kind_weights]` (default 1.0 per kind); `[identity] bots`.
+- **Financial files:** `gap_months.csv` = `person, month, basis, basis_source, corroborated, basis_share` (basis_share 0–100). `person_summary.csv` = `person, name, classification, months_employed, months_with_evidence, gap_months, evidence_share, proposed_pct, confirmed_pct, basis, override_reason, flags`. Re-running keeps the claimant's `confirmed_pct`, `basis`, `override_reason` and gap entries. The labour summary's TOTAL row reports SR&ED % weighted by earned wages.
+- **Leak check and backtest data.** Private terms for the leak check and paths for the backtest live in `tests/backtest/local.toml`, which is gitignored. Unit tests use synthetic text with known counts; the real 421/840/327 word counts from the reference claimant's v9 draft are asserted in the backtest.
