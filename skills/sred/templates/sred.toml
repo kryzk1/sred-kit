@@ -1,0 +1,74 @@
+# sred.toml: one claim folder per company per fiscal year.
+# Dates are TOML dates: write them unquoted, e.g. 2026-08-01.
+
+[company]
+name = ""                 # legal name
+ccpc = true               # Canadian-controlled private corporation
+provinces = []            # e.g. ["BC"]
+timezone = ""             # IANA name, e.g. "America/Toronto"; blank = UTC
+
+[fiscal_year]
+start = 2026-08-01
+end = 2027-07-31
+
+[claim]
+first_claim = false       # true if the company has never claimed SR&ED
+prior_filings = []        # prior T661 Part 2 PDFs, e.g. ["prior/FY2026-T661-Part2.pdf"]
+prior_titles = []         # project titles exactly as filed before (Line 200)
+field_codes = []          # field-of-science codes filed before (Line 206)
+scenario = ""             # locked in Phase 3: conservative | balanced | maximum
+# [[claim.prior_projects]]
+# title = ""
+# end = 2026-07-31
+
+[preparer]
+accountant = ""
+firm = ""
+labour_template = ""      # optional CSV (column,field) replacing templates/labour-summary-columns.csv
+third_party_preparer = false
+ratifier = ""             # who approves locked decisions, e.g. "CEO"
+# handoff_target = 2027-10-31
+
+[eligibility]             # answer each one; "none" is a valid answer
+government_assistance = ""
+client_contract_work = ""
+funded_by_others = ""
+work_outside_canada = ""
+
+[payroll]
+total_wages_earned = 0.0  # payroll total for the fiscal year; reconciles roster.csv
+
+[limits]
+mode = ""                 # "words" (form maximums) or "lines" (the preparer's line budget)
+# [limits.words]
+# 242 = 350
+# [limits.lines]
+# 244 = 100
+
+[classification]
+review_threshold = 0.7
+# [[classification.rules]]
+# id = "r1"
+# project = "P1"
+# level = "direct"        # direct | support | borderline | none
+# container = "acme/vision*"
+# paths = "models/*"
+
+[rates]                   # optional, for the scenario ITC estimate only; verify current rates
+itc_rate = 0.35
+proxy_rate = 0.55
+contract_rate = 0.80
+
+[identity]
+bots = []                 # extra bot account names
+
+# One [[sources]] block per tool. method: api | export | connector | git-log
+# [[sources]]
+# name = "github"
+# kind = "code"
+# tool = "github"
+# method = "api"
+# org = "acme"
+# repos = []              # empty = every repo in the org
+# subscription_end = 2027-12-31
+# issue_key_regex = '#\d+'

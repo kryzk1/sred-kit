@@ -1,0 +1,9 @@
+[project]
+name = "sred-kit"
+version = "0.1.0"
+description = "Turn a finished fiscal year into an SR&ED handoff package"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["skills/sred/scripts"]
