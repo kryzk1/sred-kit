@@ -36,7 +36,7 @@ funded_by_others = ""
 work_outside_canada = ""
 
 [payroll]
-total_wages_earned = 0.0  # payroll total for the fiscal year; reconciles roster.csv
+total_wages_earned = 0.0  # employees' earned wages for the fiscal year from payroll (no contractors)
 
 [limits]
 mode = ""                 # "words" (form maximums) or "lines" (the preparer's line budget)

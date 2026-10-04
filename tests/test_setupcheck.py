@@ -71,7 +71,7 @@ def test_two_deferred_items_are_reported_with_their_phase(make_claim):
     missing, _ = setupcheck.check_setup(deferred(make_claim))
     assert [str(m) for m in missing] == [
         "MISSING [phase 6] roster.csv alice: paid_hours",
-        "MISSING [phase 6] sred.toml: payroll.total_wages_earned: payroll total for the fiscal year, to reconcile the roster",
+        "MISSING [phase 6] sred.toml: payroll.total_wages_earned: employees' earned wages for the fiscal year from payroll (contractors excluded), to reconcile the roster",
     ]
 
 

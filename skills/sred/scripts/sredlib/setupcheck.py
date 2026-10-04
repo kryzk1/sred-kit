@@ -178,7 +178,7 @@ def check_setup(claim_dir: Path) -> tuple[list[Missing], list[str]]:
     for k in ELIGIBILITY_KEYS:
         need(3, f"eligibility.{k}", 'answer, or "none"')
     need(3, "preparer.ratifier", "who approves locked decisions")
-    need(6, "payroll.total_wages_earned", "payroll total for the fiscal year, to reconcile the roster")
+    need(6, "payroll.total_wages_earned", "employees' earned wages for the fiscal year from payroll (contractors excluded), to reconcile the roster")
     need(7, "preparer.accountant", "accountant or preparer name")
     need(7, "limits.mode", "ask the preparer whether their filing software enforces words or lines")
     return sorted(missing, key=lambda m: (m.phase, m.where, m.what)), info

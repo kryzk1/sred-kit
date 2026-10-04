@@ -294,14 +294,15 @@ def scenario_totals(roster, summary, cfg) -> dict:
 
 def write_checks(path, cfg, roster, summary, ledger, scenario, totals) -> None:
     payroll = (cfg.get("payroll") or {}).get("total_wages_earned")
-    roster_total = q2(sum((money(r["wages_earned"]) for r in roster), Decimal("0")))
+    # Payroll covers employees only; contractor invoices are not payroll.
+    roster_total = q2(sum((money(r["wages_earned"]) for r in roster if r["classification"] == "employee"), Decimal("0")))
     lines = [f"# Financial checks ({scenario})", ""]
     if not payroll:
         lines.append("- Payroll reconciliation: NOT RUN (set payroll.total_wages_earned in sred.toml)")
     else:
         expected = q2(Decimal(str(payroll)))
         status = "OK" if abs(expected - roster_total) <= Decimal("0.01") else "MISMATCH"
-        lines.append(f"- Payroll reconciliation: {status} (payroll {expected}, roster {roster_total})")
+        lines.append(f"- Payroll reconciliation: {status} (payroll {expected}, employees in roster {roster_total})")
     unconfirmed = [s["person"] for s in summary if _pct(s["confirmed_pct"]) is None]
     lines.append(f"- Unconfirmed percentages: {len(unconfirmed)}" + (f" ({', '.join(unconfirmed)})" if unconfirmed else ""))
     lines.append(f"- Review queue: {sum(e['needs_review'] == 'Y' for e in ledger)} ledger rows need a decision (review_queue.csv)")

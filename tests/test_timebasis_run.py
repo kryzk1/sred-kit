@@ -151,3 +151,11 @@ def test_cli_errors_are_clear(make_claim, capsys):
     claim = make_claim("", roster=[ALICE])
     assert time_basis.main(["--claim", str(claim)]) == 2
     assert "scenario must be one of" in capsys.readouterr().err
+
+
+def test_payroll_reconciles_against_employees_only(make_claim):
+    claim = make_claim(CLAIM_TOML.replace("total_wages_earned = 150000.00", "total_wages_earned = 100000.00"), roster=[ALICE, CAROL])
+    activity.write_rows(claim / "evidence/index/activity.csv", [commit("a" * 40, "alice", "2026-09-02", "planner/a.py")])
+    timebasis.run(claim)
+    checks = (claim / "financials/financial_checks.md").read_text()
+    assert "Payroll reconciliation: OK (payroll 100000.00, employees in roster 100000.00)" in checks
