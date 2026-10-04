@@ -7,7 +7,7 @@ import urllib.parse
 
 from .. import activity, manifest
 from ..dates import parse_iso
-from . import CaptureError, Context
+from . import CaptureError, Context, capture_window
 
 
 def _base(source: dict) -> str:
@@ -40,7 +40,7 @@ def capture(ctx: Context, http) -> dict:
     h, base = _headers(ctx.source), _base(ctx.source)
     if not ctx.source.get("projects"):
         raise CaptureError('gitlab source needs projects = ["group/project", ...]')
-    start, end = ctx.fy
+    start, end = capture_window(ctx.fy)
     since, until = f"{start.isoformat()}T00:00:00Z", f"{end.isoformat()}T23:59:59Z"
     ctx.raw_dir.mkdir(parents=True, exist_ok=True)
     counts, files = {"projects": 0, "merge_requests": 0, "commits": 0}, []

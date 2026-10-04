@@ -47,7 +47,7 @@ def test_capture_fetches_missing_comments_and_normalizes(tmp_path, fake_http, mo
         ("GET", f"{BASE}/rest/api/3/issue/ACME-12/comment?startAt=0", {"total": 2, "comments": [C100, C101]}, {}),
     ])
     assert get_adapter("jira").capture(ctx, http) == {"issues": 1}
-    assert http.calls[0][2]["jql"].startswith("project in (ACME) AND updated >= \"2026-08-01\"")
+    assert http.calls[0][2]["jql"].startswith("project in (ACME) AND updated >= \"2026-07-30\"")
     rows = {r["key"]: r for r in get_adapter("jira").normalize(ctx)}
     assert set(rows) == {"ACME-12", "ACME-12:history:900:status", "ACME-12:history:900:assignee", "ACME-12:comment:100", "ACME-12:comment:101", "ACME-12:resolved"}
     assert rows["ACME-12"]["person"] == "alice" and rows["ACME-12"]["refs"] == "ACME-7"

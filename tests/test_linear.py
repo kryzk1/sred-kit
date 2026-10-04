@@ -40,7 +40,7 @@ def test_capture_pages_and_normalize_events(tmp_path, fake_http, monkeypatch):
     http = fake_http([("POST", "https://api.linear.app/graphql", pages, {})])
     counts = get_adapter("linear").capture(ctx, http)
     assert counts == {"issues": 2, "comments": 1, "history": 2}
-    assert http.calls[0][2]["variables"]["filter"]["updatedAt"]["gte"] == "2026-08-01T00:00:00.000Z"
+    assert http.calls[0][2]["variables"]["filter"]["updatedAt"]["gte"] == "2026-07-30T00:00:00.000Z"
     notes = json.loads((tmp_path / "evidence/raw/MANIFEST.json").read_text())["sources"]["lin"]["notes"]
     assert notes == ["ACME-40 comments capped at 50"]
     rows = {r["key"]: r for r in get_adapter("linear").normalize(ctx)}

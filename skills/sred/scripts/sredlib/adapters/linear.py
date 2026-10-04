@@ -6,12 +6,12 @@ import os
 
 from .. import activity, manifest
 from ..dates import parse_iso
-from . import CaptureError, Context
+from . import CaptureError, Context, capture_window
 
 URL = "https://api.linear.app/graphql"
 USER = "{ id name email }"
 QUERY = """query($after: String, $filter: IssueFilter) {
-  issues(first: 25, after: $after, includeArchived: true, filter: $filter) {
+  issues(first: 10, after: $after, includeArchived: true, filter: $filter) {
     pageInfo { hasNextPage endCursor }
     nodes {
       id identifier title description url branchName
@@ -45,7 +45,7 @@ def check(source: dict, http) -> str:
 
 
 def capture(ctx: Context, http) -> dict:
-    start, end = ctx.fy
+    start, end = capture_window(ctx.fy)
     flt = {"updatedAt": {"gte": f"{start.isoformat()}T00:00:00.000Z"}, "createdAt": {"lte": f"{end.isoformat()}T23:59:59.999Z"}}
     issues, after, truncated = [], None, []
     while True:

@@ -37,7 +37,7 @@ def test_git_log_includes_abandoned_branches(tmp_path):
     git(repo, "checkout", "-q", "-")
     resolver = Resolver([{"id": "alice", "name": "Alice Chen", "aliases": "email:alice@acme.test"}])
     ctx = Context(tmp_path, {"name": "git", "kind": "code", "method": "git-log", "paths": ["clones/vision"]}, FY, resolver, (r"[A-Z]+-\d+",))
-    assert get_adapter("git-log").capture(ctx) == {"repos": 1, "commits": 2}
+    assert get_adapter("git-log").capture(ctx) == {"repos": 1, "commits": 3}  # whole history; normalize filters
     rows = sorted(get_adapter("git-log").normalize(ctx), key=lambda r: r["date"])
     assert [r["title"] for r in rows] == ["Test occlusion sampler", "Abandoned idea"]
     assert rows[0]["paths"] == "planner/b.py" and rows[0]["refs"] == "ACME-12" and rows[0]["person"] == "alice"

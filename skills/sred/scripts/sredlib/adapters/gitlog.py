@@ -33,9 +33,10 @@ def capture(ctx: Context, http=None) -> dict:
     ctx.raw_dir.mkdir(parents=True, exist_ok=True)
     files, counts = [], {"repos": 0, "commits": 0}
     for clone in _clones(ctx):
+        # Whole history: git filters on committer date in the machine's time zone, while the time basis uses
+        # author date in the company's; normalize() applies the fiscal-year window.
         out = subprocess.run(
-            ["git", "-C", str(clone), "log", "--all", "--no-merges", f"--since={start.isoformat()}T00:00:00",
-             f"--until={end.isoformat()}T23:59:59", f"--pretty=format:{FORMAT}", "--name-only"],
+            ["git", "-C", str(clone), "log", "--all", "--no-merges", f"--pretty=format:{FORMAT}", "--name-only"],
             capture_output=True, text=True, check=True).stdout
         path = ctx.raw_dir / f"{clone.name}.log"
         path.write_text(out, encoding="utf-8")

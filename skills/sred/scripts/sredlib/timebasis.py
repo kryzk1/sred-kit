@@ -139,10 +139,35 @@ def employed_months(person: dict, fy: tuple[date, date]) -> list[str]:
     return month_range(s, e) if s <= e else []
 
 
-def merge_gaps(existing: list[dict], gaps: list[tuple[str, str]]) -> list[dict]:
-    keep = {(g["person"], g["month"]): g for g in existing}
+MONTH_NAMES = {m: i for i, m in enumerate(["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"], start=1)}
+
+
+def normalize_month(value: str) -> str:
+    """'2026-10', '2026-10-01', '10/2026', 'Oct-26', 'Oct 2026', 'October 2026' -> '2026-10'.
+
+    Spreadsheet programs rewrite month keys when a claimant edits the CSV; unrecognized values pass through.
+    """
+    v = (value or "").strip()
+    m = re.fullmatch(r"(\d{4})-(\d{1,2})(?:-\d{1,2})?", v)
+    if m:
+        return f"{int(m.group(1)):04d}-{int(m.group(2)):02d}"
+    m = re.fullmatch(r"(\d{1,2})/(\d{4})", v)
+    if m:
+        return f"{int(m.group(2)):04d}-{int(m.group(1)):02d}"
+    m = re.fullmatch(r"([A-Za-z]{3})[A-Za-z]*[-\s']+(\d{2}|\d{4})", v)
+    if m and m.group(1).lower() in MONTH_NAMES:
+        year = int(m.group(2)) + (2000 if len(m.group(2)) == 2 else 0)
+        return f"{year:04d}-{MONTH_NAMES[m.group(1).lower()]:02d}"
+    return v
+
+
+def merge_gaps(existing: list[dict], gaps: list[tuple[str, str]]) -> tuple[list[dict], list[dict]]:
+    """Gap rows for this run, plus claimant entries that no longer match a gap month (kept, never dropped)."""
+    keep = {(g["person"], normalize_month(g["month"])): {**g, "month": normalize_month(g["month"])} for g in existing}
     blank = {"basis": "", "basis_source": "", "corroborated": "", "basis_share": ""}
-    return [keep.get((person, month)) or {"person": person, "month": month, **blank} for person, month in gaps]
+    rows = [keep.pop((person, month), None) or {"person": person, "month": month, **blank} for person, month in gaps]
+    leftovers = [g for g in keep.values() if (g.get("basis") or "").strip()]
+    return rows, leftovers
 
 
 def gap_share(g: dict, scenario: str) -> float:
@@ -160,9 +185,18 @@ DEFAULT_COLUMNS_PATH = Path(__file__).resolve().parent.parent.parent / "template
 MONEY_FIELDS = ("paid_hours", "wages_paid", "wages_earned", "bonus", "taxable_benefits", "pay_in_lieu")
 
 
-def _pct(v):
-    v = (v or "").strip().rstrip("%").strip()
-    return float(v) if v else None
+def _pct(v, who: str = ""):
+    """A percentage typed by the claimant: blank -> None; otherwise a number from 0 to 100."""
+    text = (v or "").strip().rstrip("%").strip()
+    if not text:
+        return None
+    try:
+        pct = float(text)
+    except ValueError:
+        raise TimeBasisError(f"{who or 'person_summary.csv'}: confirmed_pct {v!r} is not a number (write e.g. 75 or 75%)") from None
+    if not 0 <= pct <= 100:
+        raise TimeBasisError(f"{who or 'person_summary.csv'}: confirmed_pct {v!r} must be between 0 and 100")
+    return pct
 
 
 def _effective(s: dict) -> float:
@@ -173,6 +207,8 @@ def _effective(s: dict) -> float:
 def summarize(roster, months, gap_rows, fy, scenario, previous, use_confirmed: bool = True) -> list[dict]:
     gap_by = {(g["person"], g["month"]): g for g in gap_rows}
     prev = {p["person"]: p for p in previous} if use_confirmed else {}
+    for pid, p in prev.items():
+        _pct(p.get("confirmed_pct"), pid)  # fail early, naming the person, before any number is written
     out = []
     for r in roster:
         pid = r["id"]
@@ -292,7 +328,7 @@ def scenario_totals(roster, summary, cfg) -> dict:
     return out
 
 
-def write_checks(path, cfg, roster, summary, ledger, scenario, totals) -> None:
+def write_checks(path, cfg, roster, summary, ledger, scenario, totals, notes=()) -> None:
     payroll = (cfg.get("payroll") or {}).get("total_wages_earned")
     # Payroll covers employees only; contractor invoices are not payroll.
     roster_total = q2(sum((money(r["wages_earned"]) for r in roster if r["classification"] == "employee"), Decimal("0")))
@@ -306,6 +342,7 @@ def write_checks(path, cfg, roster, summary, ledger, scenario, totals) -> None:
     unconfirmed = [s["person"] for s in summary if _pct(s["confirmed_pct"]) is None]
     lines.append(f"- Unconfirmed percentages: {len(unconfirmed)}" + (f" ({', '.join(unconfirmed)})" if unconfirmed else ""))
     lines.append(f"- Review queue: {sum(e['needs_review'] == 'Y' for e in ledger)} ledger rows need a decision (review_queue.csv)")
+    lines += [f"- WARNING: {n}" for n in notes]
     lines += ["", "## Flags", ""]
     lines += [f"- {s['person']}: {s['flags']}" for s in summary if s["flags"]] or ["- none"]
     lines += ["", "## Scenario totals", ""] + [f"- {k}: {v}" for k, v in totals.items()]
@@ -331,8 +368,11 @@ def run(claim_dir: Path, scenario: str | None = None, preliminary: bool = False)
                     key=lambda e: (e["date"], e["source"], e["key"]))
     months = monthly(ledger, scenario, config.kind_weights(cfg))
     gaps = [(r["id"], m) for r in roster for m in employed_months(r, fy) if not (months.get((r["id"], m)) or {}).get("evidence_days")]
-    gap_rows = merge_gaps(_read_csv(fin / "gap_months.csv"), gaps)
+    gap_rows, gap_leftovers = merge_gaps(_read_csv(fin / "gap_months.csv"), gaps)
     previous = [] if preliminary else _read_csv(fin / "person_summary.csv")
+    roster_ids = {r["id"] for r in roster}
+    person_leftovers = [p for p in previous if p.get("person") not in roster_ids
+                        and ((p.get("confirmed_pct") or "").strip() or (p.get("basis") or "").strip())]
     summary = summarize(roster, months, gap_rows, fy, scenario, previous, use_confirmed=not preliminary)
     _write_csv(out_dir / "activity_ledger.csv", LEDGER_COLUMNS, ledger)
     _write_csv(out_dir / "review_queue.csv", LEDGER_COLUMNS, [e for e in ledger if e["needs_review"] == "Y"])
@@ -349,10 +389,18 @@ def run(claim_dir: Path, scenario: str | None = None, preliminary: bool = False)
     _write_csv(out_dir / "person_summary.csv", SUMMARY_COLUMNS, summary)
     totals = scenario_totals(roster, summary, cfg)
     (out_dir / f"scenario_{scenario}.json").write_text(json.dumps({"scenario": scenario, **totals}, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    unmatched_notes = []
     if not preliminary:
         _write_csv(fin / "gap_months.csv", GAP_COLUMNS, gap_rows)
+        for name, columns, rows in (("gap_months_unmatched.csv", GAP_COLUMNS, gap_leftovers),
+                                    ("person_summary_unmatched.csv", SUMMARY_COLUMNS, person_leftovers)):
+            if rows:
+                _write_csv(fin / name, columns, rows)
+                unmatched_notes.append(f"{len(rows)} claimant entries no longer match and were kept in {name}: review them")
+            elif (fin / name).exists():
+                (fin / name).unlink()
         with (fin / "labour_summary.csv").open("w", newline="", encoding="utf-8") as fh:
             csv.writer(fh, lineterminator="\n").writerows(labour_summary(roster, summary, load_columns(cfg)))
-    write_checks(out_dir / "financial_checks.md", cfg, roster, summary, ledger, scenario, totals)
+    write_checks(out_dir / "financial_checks.md", cfg, roster, summary, ledger, scenario, totals, unmatched_notes)
     return {"scenario": scenario, "out_dir": str(out_dir), "people": len(summary),
             "review_queue": sum(e["needs_review"] == "Y" for e in ledger), **totals}

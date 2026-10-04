@@ -9,11 +9,12 @@ from __future__ import annotations
 
 import importlib
 from dataclasses import dataclass, field
-from datetime import date, timezone, tzinfo
+from datetime import date, timedelta, timezone, tzinfo
 from pathlib import Path
 
 from ..roster import Resolver
 
+PAD_DAYS = 2
 MODULES = {"github": "github", "gitlab": "gitlab", "linear": "linear", "jira": "jira", "git-log": "gitlog"}
 
 
@@ -50,3 +51,9 @@ def get_adapter(tool: str):
     if tool not in MODULES:
         raise CaptureError(f'no capture adapter for {tool!r}; use method = "export" or "connector"')
     return importlib.import_module(f"{__name__}.{MODULES[tool]}")
+
+
+def capture_window(fy: tuple[date, date]) -> tuple[date, date]:
+    """Fetch a little beyond the fiscal year: APIs filter in UTC or the API user's time zone, so the
+    company-local first and last days can fall outside an exact window. normalize() filters exactly."""
+    return fy[0] - timedelta(days=PAD_DAYS), fy[1] + timedelta(days=PAD_DAYS)

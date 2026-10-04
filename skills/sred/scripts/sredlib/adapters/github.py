@@ -5,14 +5,16 @@ import json
 import os
 import re
 import subprocess
+import urllib.parse
 
 from .. import activity, manifest
 from ..dates import parse_iso
 from ..http import HttpError
-from . import CaptureError, Context
+from . import CaptureError, Context, capture_window
 
 API = "https://api.github.com"
 _NEXT_RE = re.compile(r'<([^>]+)>;\s*rel="next"')
+SQUASH_RE = re.compile(r"\(#(\d+)\)\s*$")
 
 
 def _token(source: dict) -> str:
@@ -61,7 +63,7 @@ def check(source: dict, http) -> str:
 
 def capture(ctx: Context, http) -> dict:
     h = _headers(ctx.source)
-    start, end = ctx.fy
+    start, end = capture_window(ctx.fy)
     ctx.raw_dir.mkdir(parents=True, exist_ok=True)
     counts, files = {"repos": 0, "pulls": 0, "commits": 0}, []
     for full in _repos(ctx.source, http, h):
@@ -84,12 +86,20 @@ def capture(ctx: Context, http) -> dict:
             pr["_issue_comments"] = _paged(http, f"{base}/issues/{n}/comments?per_page=100", h)
             pr["_commits"] = _paged(http, f"{base}/pulls/{n}/commits?per_page=100", h)
             pr["_files"] = [f["filename"] for f in _paged(http, f"{base}/pulls/{n}/files?per_page=100", h)]
+        # Every branch, not just the default: abandoned experiments often never get a PR.
+        commits, seen = [], set()
         try:
-            commits = _paged(http, f"{base}/commits?since={start.isoformat()}T00:00:00Z&until={end.isoformat()}T23:59:59Z&per_page=100", h)
+            branches = [b["name"] for b in _paged(http, f"{base}/branches?per_page=100", h)]
         except HttpError as exc:
             if "HTTP 409" not in str(exc):  # 409 = empty repository
                 raise
-            commits = []
+            branches = []
+        for branch in branches:
+            sha = urllib.parse.quote(branch, safe="")
+            for cm in _paged(http, f"{base}/commits?sha={sha}&since={start.isoformat()}T00:00:00Z&until={end.isoformat()}T23:59:59Z&per_page=100", h):
+                if cm["sha"] not in seen:
+                    seen.add(cm["sha"])
+                    commits.append({**cm, "_branch": branch})
         path = ctx.raw_dir / f"{full.replace('/', '__')}.json"
         path.write_text(json.dumps({"repo": full, "pulls": pulls, "commits": commits}, indent=1, sort_keys=True), encoding="utf-8")
         files.append(path)
@@ -145,6 +155,14 @@ def normalize(ctx: Context) -> list[dict]:
                      tags=tags, excerpt=c.get("body") or "", **common)
             for cm in pr.get("_commits", []):
                 emit_commit(cm, repo, rel, tags + [f"pr:{key}"], paths)
+        prs = {pr["number"]: pr for pr in data["pulls"]}
         for cm in data["commits"]:
-            emit_commit(cm, repo, rel, [], [])
+            tags = [f"branch:{cm['_branch']}"] if cm.get("_branch") else []
+            paths: list[str] = []
+            m = SQUASH_RE.search(activity.first_line((cm.get("commit") or {}).get("message", "")))
+            pr = prs.get(int(m.group(1))) if m else None
+            if pr:  # a squash or merge commit carries its PR's labels, branch and files
+                tags += [label["name"] for label in pr.get("labels", [])] + [f"pr:{repo}#{pr['number']}"]
+                paths = pr.get("_files", [])
+            emit_commit(cm, repo, rel, tags, paths)
     return rows

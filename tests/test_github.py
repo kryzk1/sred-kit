@@ -27,7 +27,8 @@ def routes():
         ("GET", f"{API}/pulls/7/commits", [{"sha": SHA1, "author": {"login": "achen"}, "html_url": "u1",
                                            "commit": {"message": "Sample grasps by visibility\n\nACME-12", "author": {"date": "2026-09-02T09:00:00Z", "email": "alice@acme.test"}}}], {}),
         ("GET", f"{API}/pulls/7/files", [{"filename": "planner/occlusion.py"}], {}),
-        ("GET", f"{API}/commits?since=", [
+        ("GET", f"{API}/branches", [{"name": "main"}], {}),
+        ("GET", f"{API}/commits?sha=main&", [
             {"sha": SHA1, "author": None, "commit": {"message": "dup", "author": {"date": "2026-09-02T09:00:00Z", "email": "alice@acme.test"}}},
             {"sha": SHA2, "author": None, "commit": {"message": "Direct commit", "author": {"date": "2026-10-01T09:00:00Z", "email": "bob@acme.test"}}},
         ], {}),

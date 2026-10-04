@@ -79,7 +79,8 @@ def test_gap_rows_merge_and_scenario_shares():
         {"person": "alice", "month": "2026-10", "basis": "design reviews", "basis_source": "calendar", "corroborated": "Y", "basis_share": "60"},
         {"person": "alice", "month": "2026-09", "basis": "stale", "basis_source": "", "corroborated": "", "basis_share": "10"},
     ]
-    rows = merge_gaps(existing, [("alice", "2026-10"), ("alice", "2026-11")])
+    rows, leftovers = merge_gaps(existing, [("alice", "2026-10"), ("alice", "2026-11")])
+    assert [g["basis"] for g in leftovers] == ["stale"]
     assert [r["month"] for r in rows] == ["2026-10", "2026-11"]
     assert rows[0]["basis"] == "design reviews" and rows[1]["basis"] == ""
     corroborated, asserted = rows[0], dict(rows[0], corroborated="")

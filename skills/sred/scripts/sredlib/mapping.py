@@ -6,6 +6,7 @@ import json
 import tomllib
 from dataclasses import dataclass, field
 from datetime import date
+from zoneinfo import ZoneInfo
 from pathlib import Path
 
 from . import activity
@@ -207,6 +208,8 @@ def import_export(mapping: dict, export_path: Path, *, source: str, resolver: Re
         records = _load_json(export_path, mapping.get("records", ""))
     raw_path = str(Path(export_path).resolve().relative_to(Path(claim_dir).resolve()))
     formats = mapping.get("date_formats", ["iso"])
+    # Exports usually write local times without a zone: read them in the mapping's zone, else the company's.
+    naive_tz = ZoneInfo(mapping["timezone"]) if mapping.get("timezone") else tz
     start, end = fy
     seen: set[str] = set()
     for n, rec in enumerate(records, start=1):
@@ -225,7 +228,7 @@ def import_export(mapping: dict, export_path: Path, *, source: str, resolver: Re
                     continue
                 key = f"{base}{suffix}"
                 try:
-                    ts = parse_datetime(f["date"], formats)
+                    ts = parse_datetime(f["date"], formats, naive_tz)
                 except ValueError as exc:
                     result.failures.append(f"record {n} ({key}): {exc}")
                     continue

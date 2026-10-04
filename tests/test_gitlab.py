@@ -7,7 +7,7 @@ from sredlib.roster import Resolver
 
 FY = (date(2026, 8, 1), date(2027, 7, 31))
 P = "https://gitlab.com/api/v4/projects/acme%2Fvision"
-Q = "state=all&updated_after=2026-08-01T00:00:00Z&created_before=2027-07-31T23:59:59Z&per_page=100"
+Q = "state=all&updated_after=2026-07-30T00:00:00Z&created_before=2027-08-02T23:59:59Z&per_page=100"  # padded window
 SHA = "c" * 40
 MR = {"iid": 3, "title": "Depth prior for grasping", "description": "Closes #12", "author": {"username": "achen"},
       "created_at": "2026-09-04T10:00:00Z", "merged_at": None, "web_url": "https://gitlab.com/acme/vision/-/merge_requests/3",

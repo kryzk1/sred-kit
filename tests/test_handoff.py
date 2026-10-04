@@ -69,7 +69,8 @@ def make(make_claim, alice_pct="75", carol_pct="33.33", narrative=NARRATIVE, pro
               [{"claim_id": f"C{i}", "statement": f"s{i}", "source_key": f"k{i}", "raw_path": "evidence/raw/gh/x.json", "verified": "Y"} for i in range(1, 5)])
     write_csv(claim / "financials/person_summary.csv", timebasis.SUMMARY_COLUMNS,
               [{"person": "alice", "confirmed_pct": alice_pct}, {"person": "carol", "confirmed_pct": carol_pct}])
-    (claim / "financials/labour_summary.csv").write_text("Name\nAlice Chen\n")
+    shown = [f"{name},{float(pct):.2f}%" for name, pct in (("Alice Chen", alice_pct), ("Carol Diaz", carol_pct)) if pct]
+    (claim / "financials/labour_summary.csv").write_text("Name,SRED %\n" + "\n".join(shown) + "\n")
     (claim / "STATE.md").write_text(STATE)
     return claim
 

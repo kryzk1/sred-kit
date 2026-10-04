@@ -7,7 +7,7 @@ import os
 
 from .. import activity, manifest
 from ..dates import parse_iso
-from . import CaptureError, Context
+from . import CaptureError, Context, capture_window
 
 FIELDS = ["summary", "issuetype", "status", "project", "assignee", "reporter", "creator", "created", "updated",
           "resolutiondate", "labels", "description", "comment"]
@@ -58,7 +58,7 @@ def _all(http, url, headers, list_key) -> list:
 
 def capture(ctx: Context, http) -> dict:
     base, h = _base(ctx.source), _headers(ctx.source)
-    start, end = ctx.fy
+    start, end = capture_window(ctx.fy)
     jql = f'updated >= "{start.isoformat()}" AND created <= "{end.isoformat()} 23:59" ORDER BY created ASC'
     if ctx.source.get("projects"):
         jql = f"project in ({', '.join(ctx.source['projects'])}) AND " + jql

@@ -5,9 +5,10 @@ import csv
 import re
 import shutil
 import tomllib
+from decimal import Decimal
 from pathlib import Path
 
-from . import narrative
+from . import config, narrative, timebasis
 from .narrative import LINES, Finding
 from .roster import load_roster
 
@@ -36,10 +37,20 @@ def _section(text: str, heading: str) -> str:
 
 
 def _confirmed(s: dict | None):
+    """(percent or None, problem or None) for one person_summary row."""
     if not s:
-        return None
-    v = (s.get("confirmed_pct") or "").strip().rstrip("%").strip()
-    return float(v) if v else None
+        return None, None
+    raw = (s.get("confirmed_pct") or "").strip()
+    text = raw.rstrip("%").strip()
+    if not text:
+        return None, None
+    try:
+        pct = float(text)
+    except ValueError:
+        pct = -1.0
+    if not 0 <= pct <= 100:
+        return None, f"confirmed_pct {raw!r} is not a percentage between 0 and 100"
+    return pct, None
 
 
 def build(claim_dir) -> list[str]:
@@ -136,12 +147,14 @@ def check(claim_dir) -> list[Finding]:
                     add("error", "CONSIST", pid, f"Section C names {name!r}, who is not in roster.csv")
                     continue
                 bucket.add(r["id"])
-                pct = _confirmed(summary.get(r["id"]))
+                pct, _ = _confirmed(summary.get(r["id"]))
                 if pct is not None and pct <= 0:
                     add("error", "CONSIST", pid, f"{name} is named in Section C but has 0% SR&ED time")
     for pid, s in summary.items():
-        pct = _confirmed(s)
-        if pct is None:
+        pct, problem = _confirmed(s)
+        if problem:
+            add("error", "CONSIST", "financials", f"{pid}: {problem}")
+        elif pct is None:
             add("error", "CONSIST", "financials", f"{pid}: SR&ED % is not confirmed")
         elif pct > 0 and pid not in named | named_contractors:
             add("warning", "CONSIST", "financials", f"{pid} is claimed at {pct}% but not named in any project's Section C")
@@ -149,6 +162,31 @@ def check(claim_dir) -> list[Finding]:
     for cid in sorted(named_contractors - contractor_ids):
         add("error", "CONSIST", "draft", f"{cid} is listed under Section C contractors but is an employee in roster.csv")
     for cid in sorted(contractor_ids - named_contractors):
-        if (_confirmed(summary.get(cid)) or 0) > 0:
+        if (_confirmed(summary.get(cid))[0] or 0) > 0:
             add("warning", "CONSIST", "financials", f"contractor {cid} is claimed but not listed under Section C contractors")
+    findings += _check_labour_summary(claim_dir, out / "labour_summary.csv", roster, summary)
+    return findings
+
+
+def _check_labour_summary(claim_dir: Path, path: Path, roster: list[dict], summary: dict) -> list[Finding]:
+    """The labour summary sent to the accountant must show each person's confirmed percentage."""
+    if not path.exists():
+        return []
+    columns = {field: column for column, field in timebasis.load_columns(config.load_config(claim_dir / "sred.toml"))}
+    name_col, pct_col = columns.get("name"), columns.get("sred_pct")
+    if not (name_col and pct_col):
+        return []
+    shown = {(r.get(name_col) or "").strip().lower(): (r.get(pct_col) or "").strip() for r in _rows(path)}
+    findings = []
+    for r in roster:
+        pct, problem = _confirmed(summary.get(r["id"]))
+        if pct is None or problem:
+            continue
+        expected = f"{timebasis.q2(Decimal(str(pct)))}%"
+        got = shown.get(r["name"].strip().lower())
+        if got is None:
+            findings.append(Finding("error", "CONSIST", "handoff", f"{r['name']} is missing from handoff/labour_summary.csv"))
+        elif got != expected:
+            findings.append(Finding("error", "CONSIST", "handoff", f"handoff/labour_summary.csv is stale: {r['name']} shows {got!r}, "
+                                    f"confirmed {expected}; rerun time_basis.py, then handoff.py build"))
     return findings

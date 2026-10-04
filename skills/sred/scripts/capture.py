@@ -7,10 +7,12 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
 from sredlib import config
+from sredlib.manifest import manifest_path
 from sredlib.adapters import CaptureError, Context, adapter_key, get_adapter
 from sredlib.http import Http, HttpError
 
@@ -61,6 +63,10 @@ def cmd_capture(args) -> int:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
     print(f"{args.source}: " + ", ".join(f"{k}={v}" for k, v in counts.items()))
+    mpath = manifest_path(claim)
+    if mpath.exists():
+        for note in json.loads(mpath.read_text(encoding="utf-8"))["sources"].get(args.source, {}).get("notes", []):
+            print(f"NOTE: {note}")
     print(f"Raw files are in {ctx.raw_dir}. Keep a backup copy of evidence/raw/ somewhere independent.")
     return 0
 
