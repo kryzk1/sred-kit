@@ -3,12 +3,15 @@ from __future__ import annotations
 
 import csv
 import fnmatch
+import json
 import re
 from collections import defaultdict
 from datetime import date
+from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 
-from . import activity
+from . import activity, config
+from .roster import load_roster
 
 SCENARIOS = {"conservative": {"direct"}, "balanced": {"direct", "support"}, "maximum": {"direct", "support", "borderline"}}
 LEVELS = {"direct", "support", "borderline", "none"}
@@ -151,3 +154,204 @@ def gap_share(g: dict, scenario: str) -> float:
         return max(0.0, min(100.0, float(g.get("basis_share") or 0))) / 100
     except ValueError as exc:
         raise TimeBasisError(f"gap_months.csv {g['person']} {g['month']}: basis_share must be a number 0-100") from exc
+
+
+DEFAULT_COLUMNS_PATH = Path(__file__).resolve().parent.parent.parent / "templates" / "labour-summary-columns.csv"
+MONEY_FIELDS = ("paid_hours", "wages_paid", "wages_earned", "bonus", "taxable_benefits", "pay_in_lieu")
+
+
+def _pct(v):
+    v = (v or "").strip().rstrip("%").strip()
+    return float(v) if v else None
+
+
+def _effective(s: dict) -> float:
+    c = _pct(s.get("confirmed_pct"))
+    return c if c is not None else float(s.get("proposed_pct") or 0)
+
+
+def summarize(roster, months, gap_rows, fy, scenario, previous, use_confirmed: bool = True) -> list[dict]:
+    gap_by = {(g["person"], g["month"]): g for g in gap_rows}
+    prev = {p["person"]: p for p in previous} if use_confirmed else {}
+    out = []
+    for r in roster:
+        pid = r["id"]
+        emp = employed_months(r, fy)
+        shares, ev_days, sred_days, with_ev, gap_n = [], 0, 0.0, 0, 0
+        for month in emp:
+            m = months.get((pid, month))
+            if m and m["evidence_days"]:
+                shares.append(m["sred_days"] / m["evidence_days"])
+                with_ev += 1
+                ev_days += m["evidence_days"]
+                sred_days += m["sred_days"]
+            else:
+                gap_n += 1
+                shares.append(gap_share(gap_by.get((pid, month), {}), scenario))
+        proposed = round(100 * sum(shares) / len(shares), 2) if shares else 0.0
+        p = prev.get(pid, {})
+        out.append({
+            "person": pid, "name": r["name"], "classification": r["classification"], "months_employed": len(emp),
+            "months_with_evidence": with_ev, "gap_months": gap_n,
+            "evidence_share": f"{(100 * sred_days / ev_days) if ev_days else 0:.2f}", "proposed_pct": f"{proposed:.2f}",
+            "confirmed_pct": p.get("confirmed_pct", "") or "", "basis": p.get("basis", "") or "",
+            "override_reason": p.get("override_reason", "") or "", "flags": "",
+        })
+    _flag(out, roster)
+    return out
+
+
+def _flag(summary: list[dict], roster: list[dict]) -> None:
+    by_id = {r["id"]: r for r in roster}
+    classes = defaultdict(set)
+    for r in roster:
+        classes[r["name"].strip().lower()].add(r["classification"])
+    claimed = [_effective(s) for s in summary if _effective(s) > 0]
+    identical = len(claimed) >= 2 and len(set(claimed)) == 1
+    for s in summary:
+        r, pct, flags = by_id[s["person"]], _effective(s), []
+        conf = _pct(s["confirmed_pct"])
+        if conf is None:
+            flags.append("UNCONFIRMED")
+        if identical and pct > 0:
+            flags.append("IDENTICAL_PCT")
+        if pct > 90 and not s["basis"].strip():
+            flags.append("OVER_90_NO_BASIS")
+        if r.get("in_canada") == "N" and pct > 0:
+            flags.append("OUTSIDE_CANADA")
+        if len(classes[r["name"].strip().lower()]) > 1:
+            flags.append("DUAL_ROLE")
+        if conf is not None and abs(conf - float(s["proposed_pct"])) > 15 and not s["override_reason"].strip():
+            flags.append("OVERRIDE_NO_REASON")
+        if pct > 0 and s["months_with_evidence"] < 3:
+            flags.append("THIN_EVIDENCE")
+        s["flags"] = ";".join(flags)
+
+
+def money(v) -> Decimal:
+    text = str(v or "").replace(",", "").replace("$", "").strip()
+    return Decimal(text) if text else Decimal("0")
+
+
+def q2(d: Decimal) -> Decimal:
+    return d.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+
+
+def load_columns(cfg: dict) -> list[tuple[str, str]]:
+    custom = (cfg.get("preparer") or {}).get("labour_template")
+    path = config.resolve_path(cfg, custom) if custom else DEFAULT_COLUMNS_PATH
+    return [(r["column"], r["field"]) for r in _read_csv(path)]
+
+
+def labour_summary(roster, summary, columns) -> list[list[str]]:
+    by_id = {s["person"]: s for s in summary}
+    rows = [[c for c, _ in columns]]
+    totals = defaultdict(lambda: Decimal("0"))
+    for r in roster:
+        s = by_id[r["id"]]
+        conf = _pct(s.get("confirmed_pct"))
+        pct = Decimal(str(_effective(s)))
+        frac = pct / 100
+        employee = r["classification"] == "employee"
+        earned = money(r["wages_earned"])
+        sred_hours = q2(money(r["paid_hours"]) * frac) if employee else None
+        sred_wages = q2(earned * frac)
+        basis = (s.get("basis") or "").strip() or ("" if conf is not None else "PROPOSED - not confirmed")
+        fields = {**r, "classification_label": "Employee" if employee else "Subcontractor", "sred_pct": f"{q2(pct)}%",
+                  "sred_eligible": "TRUE" if pct > 0 else "FALSE", "sred_hours": "" if sred_hours is None else str(sred_hours),
+                  "sred_wages": str(sred_wages), "basis": basis}
+        rows.append([str(fields.get(f, "")) for _, f in columns])
+        for f in MONEY_FIELDS:
+            totals[f] += money(r.get(f, ""))
+        totals["sred_hours"] += sred_hours or Decimal("0")
+        totals["sred_wages"] += sred_wages
+        if pct > 0:
+            totals["eligible_earned"] += earned
+    weighted = q2(100 * totals["sred_wages"] / totals["eligible_earned"]) if totals["eligible_earned"] else Decimal("0.00")
+    total = {"name": "TOTAL", "sred_pct": f"{weighted}%", "basis": "SRED % weighted by earned wages of people claimed",
+             **{f: str(q2(totals[f])) for f in MONEY_FIELDS + ("sred_hours", "sred_wages")}}
+    rows.append([total.get(f, "") for _, f in columns])
+    return rows
+
+
+def scenario_totals(roster, summary, cfg) -> dict:
+    by_id = {s["person"]: s for s in summary}
+    emp, con = Decimal("0"), Decimal("0")
+    for r in roster:
+        amount = q2(money(r["wages_earned"]) * Decimal(str(_effective(by_id[r["id"]]))) / 100)
+        if r["classification"] == "employee":
+            emp += amount
+        elif r.get("arms_length") == "Y" and r.get("in_canada") == "Y":
+            con += amount
+    out = {"employee_sred_wages": str(q2(emp)), "contractor_sred_amount": str(q2(con))}
+    rates = config.rates(cfg) or {}
+    if {"itc_rate", "proxy_rate", "contract_rate"} <= rates.keys():
+        est = (emp * (1 + Decimal(str(rates["proxy_rate"]))) + con * Decimal(str(rates["contract_rate"]))) * Decimal(str(rates["itc_rate"]))
+        out["itc_estimate"] = str(q2(est))
+        out["itc_note"] = "Estimate only: ignores expenditure limits, specified-employee caps and proxy-method salary-base rules."
+    return out
+
+
+def write_checks(path, cfg, roster, summary, ledger, scenario, totals) -> None:
+    payroll = (cfg.get("payroll") or {}).get("total_wages_earned")
+    roster_total = q2(sum((money(r["wages_earned"]) for r in roster), Decimal("0")))
+    lines = [f"# Financial checks ({scenario})", ""]
+    if not payroll:
+        lines.append("- Payroll reconciliation: NOT RUN (set payroll.total_wages_earned in sred.toml)")
+    else:
+        expected = q2(Decimal(str(payroll)))
+        status = "OK" if abs(expected - roster_total) <= Decimal("0.01") else "MISMATCH"
+        lines.append(f"- Payroll reconciliation: {status} (payroll {expected}, roster {roster_total})")
+    unconfirmed = [s["person"] for s in summary if _pct(s["confirmed_pct"]) is None]
+    lines.append(f"- Unconfirmed percentages: {len(unconfirmed)}" + (f" ({', '.join(unconfirmed)})" if unconfirmed else ""))
+    lines.append(f"- Review queue: {sum(e['needs_review'] == 'Y' for e in ledger)} ledger rows need a decision (review_queue.csv)")
+    lines += ["", "## Flags", ""]
+    lines += [f"- {s['person']}: {s['flags']}" for s in summary if s["flags"]] or ["- none"]
+    lines += ["", "## Scenario totals", ""] + [f"- {k}: {v}" for k, v in totals.items()]
+    Path(path).write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def run(claim_dir: Path, scenario: str | None = None, preliminary: bool = False) -> dict:
+    claim_dir = Path(claim_dir)
+    cfg = config.load_config(claim_dir / "sred.toml")
+    scenario = scenario or (cfg.get("claim") or {}).get("scenario")
+    if scenario not in SCENARIOS:
+        raise TimeBasisError(f"scenario must be one of {sorted(SCENARIOS)} (pass --scenario or set claim.scenario)")
+    fy = config.fiscal_year(cfg)
+    act_path = claim_dir / "evidence" / "index" / "activity.csv"
+    if not act_path.exists():
+        raise TimeBasisError("evidence/index/activity.csv not found: run index.py build first")
+    _, rows = activity.read_rows(act_path)
+    roster = load_roster(claim_dir / "roster.csv")
+    fin = claim_dir / "financials"
+    out_dir = claim_dir / "scope" / "preliminary" / scenario if preliminary else fin
+    cls = config.classification(cfg)
+    ledger = sorted(classify(rows, cls["rules"], _read_csv(fin / "classification_overrides.csv"), cls["review_threshold"]),
+                    key=lambda e: (e["date"], e["source"], e["key"]))
+    months = monthly(ledger, scenario, config.kind_weights(cfg))
+    gaps = [(r["id"], m) for r in roster for m in employed_months(r, fy) if not (months.get((r["id"], m)) or {}).get("evidence_days")]
+    gap_rows = merge_gaps(_read_csv(fin / "gap_months.csv"), gaps)
+    previous = [] if preliminary else _read_csv(fin / "person_summary.csv")
+    summary = summarize(roster, months, gap_rows, fy, scenario, previous, use_confirmed=not preliminary)
+    _write_csv(out_dir / "activity_ledger.csv", LEDGER_COLUMNS, ledger)
+    _write_csv(out_dir / "review_queue.csv", LEDGER_COLUMNS, [e for e in ledger if e["needs_review"] == "Y"])
+    gap_set, tb = set(gaps), []
+    for r in roster:
+        for m in employed_months(r, fy):
+            d = months.get((r["id"], m)) or {}
+            ev, sd = d.get("evidence_days", 0), d.get("sred_days", 0.0)
+            tb.append({"person": r["id"], "month": m, "evidence_days": ev, "sred_days": f"{sd:.2f}",
+                       "share": f"{(sd / ev) if ev else 0:.4f}",
+                       "by_project": ";".join(f"{p}:{v:.2f}" for p, v in sorted(d.get("by_project", {}).items())),
+                       "gap": "Y" if (r["id"], m) in gap_set else "N"})
+    _write_csv(out_dir / "time_basis.csv", TIME_BASIS_COLUMNS, tb)
+    _write_csv(out_dir / "person_summary.csv", SUMMARY_COLUMNS, summary)
+    totals = scenario_totals(roster, summary, cfg)
+    (out_dir / f"scenario_{scenario}.json").write_text(json.dumps({"scenario": scenario, **totals}, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    if not preliminary:
+        _write_csv(fin / "gap_months.csv", GAP_COLUMNS, gap_rows)
+        with (fin / "labour_summary.csv").open("w", newline="", encoding="utf-8") as fh:
+            csv.writer(fh, lineterminator="\n").writerows(labour_summary(roster, summary, load_columns(cfg)))
+    write_checks(out_dir / "financial_checks.md", cfg, roster, summary, ledger, scenario, totals)
+    return {"scenario": scenario, "out_dir": str(out_dir), "people": len(summary),
+            "review_queue": sum(e["needs_review"] == "Y" for e in ledger), **totals}
