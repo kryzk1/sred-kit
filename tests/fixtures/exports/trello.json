@@ -1,0 +1,11 @@
+{
+  "name": "Grasping",
+  "actions": [
+    {"id": "a1", "type": "createCard", "date": "2026-09-10T15:00:00.000Z", "memberCreator": {"username": "achen"},
+     "data": {"board": {"name": "Grasping"}, "card": {"name": "Test suction cup on porous parts"}}},
+    {"id": "a2", "type": "commentCard", "date": "2026-09-11T15:00:00.000Z", "memberCreator": {"username": "achen"},
+     "data": {"board": {"name": "Grasping"}, "card": {"name": "Test suction cup on porous parts"}, "text": "Seal failed on foam at 0.4 bar"}},
+    {"id": "a3", "type": "updateBoard", "date": "2026-09-12T15:00:00.000Z", "memberCreator": {"username": "achen"},
+     "data": {"board": {"name": "Grasping"}}}
+  ]
+}

@@ -1,0 +1,28 @@
+# Jira Cloud: Filters > Export > "Export CSV (all fields)".
+tool = "jira"
+kind = "tracker"
+format = "csv"
+verified = false
+date_formats = ["%d/%b/%y %I:%M %p", "%d/%b/%Y %I:%M %p", "%Y-%m-%d %H:%M", "iso"]
+key = "Issue key"
+container = "Project key"
+title = "Summary"
+tags = ["Issue Type", "Status", "Labels"]
+
+[[events]]
+kind = "issue_created"
+key_suffix = ""
+date = "Created"
+actor = "Reporter"
+excerpt = "Description"
+
+[[events]]
+kind = "issue_resolved"
+date = "Resolved"
+actor = "Assignee"
+
+[[events]]
+kind = "issue_comment"
+repeat = "Comment"
+split = ";"
+split_fields = ["date", "actor", "excerpt"]
