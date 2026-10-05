@@ -32,6 +32,53 @@ continuation = false
 field_code = "2.02.09"
 """
 
+RULES = """
+
+[[classification.rules]]
+id = "p1-planner"
+project = "P1"
+level = "direct"
+container = "acme/vision"
+paths = "planner/*"
+
+[[classification.rules]]
+id = "p1-harness-tests"
+project = "P1"
+level = "support"
+container = "acme/vision"
+paths = "tests/*"
+
+[[classification.rules]]
+id = "p2-tactile"
+project = "P2"
+level = "direct"
+container = "acme/vision"
+paths = "tactile/*"
+
+[[classification.rules]]
+id = "website"
+project = ""
+level = "none"
+category = "routine"
+container = "acme/website"
+"""
+
+DEMARCATION = """# Demarcation
+
+- P1 Adaptive Grasp Planning Under Occlusion: continuation of the FY2025 project (Line 208). Title and start date
+  (2024-09-08) copied from the FY2025 filing. FY2025 established that visibility-weighted sampling held above 80%
+  success up to 30% occlusion on opaque parts, and left thin and transparent parts unresolved beyond 30%. FY2026
+  investigates those classes at 40 to 60% occlusion. First FY2026 record: ACME-101 (2025-08-12).
+- P2 Tactile Slip Detection Under Sensor Drift: new project (Line 210). No related prior project. Start 2025-11-10,
+  the hypothesis recorded in ACME-125.
+"""
+
+SCENARIOS = """# Scenarios (FY2026)
+
+Recommended and chosen: **balanced** (D1). Conservative counts direct work only; maximum adds the borderline write-up
+and packaging work, which a reviewer would likely contest. Per-person figures are in scope/preliminary/<scenario>/.
+"""
+
 EVIDENCE_HEADER = "claim_id,statement,source_key,raw_path,verified\n"
 P1_EVIDENCE_PARTIAL = EVIDENCE_HEADER + (
     "C1,Prior year stopped at 30% occlusion on opaque parts,prior/FY2025-T661-Part2.md,prior/FY2025-T661-Part2.md,Y\n"
@@ -75,13 +122,13 @@ P1_NARRATIVE = """# P1: Adaptive Grasp Planning Under Occlusion
 - 210 First claim: no
 
 ## Line 242
-The prior year established that visibility-weighted sampling held above 80% grasp success up to 30% occlusion on opaque parts [C1]. It was uncertain whether any sampling strategy could keep grasp success on thin and transparent parts when depth returns become sparse above 40% occlusion.
+The prior year established that visibility-weighted sampling held above 80% grasp success up to 30% occlusion on opaque parts [C1]. It was uncertain whether any sampling strategy could keep grasp success on thin and transparent parts when depth returns become sparse at high occlusion.
 
 ## Line 244
-The team tested a learned depth prior against visibility weighting on the same scene sets. The depth prior lifted thin metal parts from 52% to 74% at 60% occlusion [C3] but lowered transparent parts. Contractor developers built the experimental harness.
+The team tested a learned depth prior against visibility weighting on the same scene sets. The depth prior lifted thin metal parts from 52% to 74% at 60% occlusion [C3] but lowered transparent parts. Contractor developers extended the experimental harness.
 
 ## Line 246
-The team determined that depth priors help thin opaque parts but degrade transparent parts at high occlusion, so sampling must be conditioned on part class [C2].
+The team determined that depth priors help thin opaque parts but degrade transparent parts at high occlusion, so sampling must be conditioned on part class [C3].
 
 ## Section C
 - Key individuals: Alice Chen (Lead Robotics Engineer)
@@ -108,9 +155,12 @@ def built_state(dest: Path, scenario: str, phase: str) -> None:
     base_copy(dest)
     toml = (dest / "sred.toml").read_text().replace('scenario = ""             # locked in Phase 3', 'scenario = "balanced"')
     (dest / "sred.toml").write_text(toml)
+    (dest / "sred.toml").write_text((dest / "sred.toml").read_text() + RULES)
     run(SCRIPTS / "index.py", "build", "--claim", dest)
     (dest / "scope").mkdir()
     (dest / "scope" / "projects.toml").write_text(PROJECTS)
+    (dest / "scope" / "demarcation.md").write_text(DEMARCATION)
+    (dest / "scope" / "scenarios.md").write_text(SCENARIOS)
     (dest / "scope" / "coverage.csv").write_text(
         "cluster,description,person_months,rows,status,exclusion_reason,evidence_keys\n"
         "planner,Grasp planning under occlusion,18,40,candidate,,acme/vision!23;ACME-118\n"
