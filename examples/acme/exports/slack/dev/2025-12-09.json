@@ -2,8 +2,8 @@
  {
   "reply_count": 2,
   "text": "Spectral slip predictor hits 30 ms on fresh sensors, but false positives climb after about 2 hours of use. Looks like sensor drift.",
-  "thread_ts": "1796854800.000100",
-  "ts": "1796854800.000100",
+  "thread_ts": "1765322400.000100",
+  "ts": "1765322400.000100",
   "type": "message",
   "user": "U0BROY",
   "user_profile": {
@@ -12,8 +12,8 @@
  },
  {
   "text": "Is it baseline drift or gain drift? A fixed threshold can't handle either.",
-  "thread_ts": "1796854800.000100",
-  "ts": "1796856060.000200",
+  "thread_ts": "1765322400.000100",
+  "ts": "1765323660.000200",
   "type": "message",
   "user": "U0ACHEN",
   "user_profile": {
@@ -22,8 +22,8 @@
  },
  {
   "text": "Trying a fixed threshold per sensor first to rule it out.",
-  "thread_ts": "1796854800.000100",
-  "ts": "1796857080.000200",
+  "thread_ts": "1765322400.000100",
+  "ts": "1765324680.000200",
   "type": "message",
   "user": "U0BROY",
   "user_profile": {

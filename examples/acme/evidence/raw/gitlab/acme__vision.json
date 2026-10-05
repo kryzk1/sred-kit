@@ -3,122 +3,122 @@
   {
    "author_email": "alice@acme.test",
    "author_name": "Alice Chen",
-   "authored_date": "2026-09-30T18:00:00.000Z",
-   "created_at": "2026-09-30T18:00:00.000Z",
-   "id": "457b47d6fbf51fcb4c3a66da163d23975131ccd0",
+   "authored_date": "2025-09-30T18:00:00.000Z",
+   "created_at": "2025-09-30T18:00:00.000Z",
+   "id": "ae49bdb8c7cc8ff282d365145db78698b6ada09b",
    "message": "CI: cache pip downloads",
    "title": "CI: cache pip downloads",
-   "web_url": "https://gitlab.com/acme/vision/-/commit/457b47d6fbf51fcb4c3a66da163d23975131ccd0"
+   "web_url": "https://gitlab.com/acme/vision/-/commit/ae49bdb8c7cc8ff282d365145db78698b6ada09b"
   },
   {
    "author_email": "carol@diaz.test",
    "author_name": "Carol Diaz",
-   "authored_date": "2026-11-20T17:00:00.000Z",
-   "created_at": "2026-11-20T17:00:00.000Z",
-   "id": "267c3987f50f8bcd8830956f1c0c7166b99d82d9",
+   "authored_date": "2025-11-20T18:00:00.000Z",
+   "created_at": "2025-11-20T18:00:00.000Z",
+   "id": "62a92b93d6ff062e46b012bcb56718127157f9cb",
    "message": "Harness: log per-class failure reasons",
    "title": "Harness: log per-class failure reasons",
-   "web_url": "https://gitlab.com/acme/vision/-/commit/267c3987f50f8bcd8830956f1c0c7166b99d82d9"
+   "web_url": "https://gitlab.com/acme/vision/-/commit/62a92b93d6ff062e46b012bcb56718127157f9cb"
   },
   {
    "author_email": "alice@acme.test",
    "author_name": "Alice Chen",
-   "authored_date": "2026-12-02T21:00:00.000Z",
-   "created_at": "2026-12-02T21:00:00.000Z",
-   "id": "39cebcc2b0b6b5f67798875dc9dc4f23646115c2",
+   "authored_date": "2025-12-02T22:00:00.000Z",
+   "created_at": "2025-12-02T22:00:00.000Z",
+   "id": "cec589fc9695661127670ec81d0e354ee3446934",
    "message": "Hybrid sampler: tune the thin-part class threshold",
    "title": "Hybrid sampler: tune the thin-part class threshold",
-   "web_url": "https://gitlab.com/acme/vision/-/commit/39cebcc2b0b6b5f67798875dc9dc4f23646115c2"
+   "web_url": "https://gitlab.com/acme/vision/-/commit/cec589fc9695661127670ec81d0e354ee3446934"
   },
   {
    "author_email": "carol@diaz.test",
    "author_name": "Carol Diaz",
-   "authored_date": "2026-12-03T17:00:00.000Z",
-   "created_at": "2026-12-03T17:00:00.000Z",
-   "id": "48833fa106aeecd6d2c256167de0e483d5dbf864",
+   "authored_date": "2025-12-03T18:00:00.000Z",
+   "created_at": "2025-12-03T18:00:00.000Z",
+   "id": "287188968136e35a4a02d1083d1423f0819d6d83",
    "message": "Harness: add transparent-part scene set",
    "title": "Harness: add transparent-part scene set",
-   "web_url": "https://gitlab.com/acme/vision/-/commit/48833fa106aeecd6d2c256167de0e483d5dbf864"
+   "web_url": "https://gitlab.com/acme/vision/-/commit/287188968136e35a4a02d1083d1423f0819d6d83"
   },
   {
    "author_email": "carol@diaz.test",
    "author_name": "Carol Diaz",
-   "authored_date": "2027-01-14T17:00:00.000Z",
-   "created_at": "2027-01-14T17:00:00.000Z",
-   "id": "720ce4fc9e2ecaa20175fa53bb9e973222c6e56d",
+   "authored_date": "2026-01-14T18:00:00.000Z",
+   "created_at": "2026-01-14T18:00:00.000Z",
+   "id": "8d2428de18c094b9e273d49f2a532e8fb5166370",
    "message": "Retry experiment scaffolding",
    "title": "Retry experiment scaffolding",
-   "web_url": "https://gitlab.com/acme/vision/-/commit/720ce4fc9e2ecaa20175fa53bb9e973222c6e56d"
+   "web_url": "https://gitlab.com/acme/vision/-/commit/8d2428de18c094b9e273d49f2a532e8fb5166370"
   },
   {
    "author_email": "alice@acme.test",
    "author_name": "Alice Chen",
-   "authored_date": "2027-01-21T22:00:00.000Z",
-   "created_at": "2027-01-21T22:00:00.000Z",
-   "id": "e93382eb3f33f9aa03deb5bbbd915e41acf0ca3b",
+   "authored_date": "2026-01-21T23:00:00.000Z",
+   "created_at": "2026-01-21T23:00:00.000Z",
+   "id": "d371c10e62b699c3e3c0bd7da8c6ae2642136d11",
    "message": "Planner: transparent-part failure taxonomy",
    "title": "Planner: transparent-part failure taxonomy",
-   "web_url": "https://gitlab.com/acme/vision/-/commit/e93382eb3f33f9aa03deb5bbbd915e41acf0ca3b"
+   "web_url": "https://gitlab.com/acme/vision/-/commit/d371c10e62b699c3e3c0bd7da8c6ae2642136d11"
   },
   {
    "author_email": "carol@diaz.test",
    "author_name": "Carol Diaz",
-   "authored_date": "2027-02-09T17:00:00.000Z",
-   "created_at": "2027-02-09T17:00:00.000Z",
-   "id": "e3a79a22ffd78da591bb43edfdb69474676a9ba0",
+   "authored_date": "2026-02-09T18:00:00.000Z",
+   "created_at": "2026-02-09T18:00:00.000Z",
+   "id": "488b1e967aba07031d1fb8f973e9d4fb61ee7b7c",
    "message": "Harness: retry counters",
    "title": "Harness: retry counters",
-   "web_url": "https://gitlab.com/acme/vision/-/commit/e3a79a22ffd78da591bb43edfdb69474676a9ba0"
+   "web_url": "https://gitlab.com/acme/vision/-/commit/488b1e967aba07031d1fb8f973e9d4fb61ee7b7c"
   },
   {
    "author_email": "bob@acme.test",
    "author_name": "Bob Roy",
-   "authored_date": "2027-05-19T17:00:00.000Z",
-   "created_at": "2027-05-19T17:00:00.000Z",
-   "id": "728b4deb90abe1b080d48a0ffda8c689094183ed",
+   "authored_date": "2026-05-19T17:00:00.000Z",
+   "created_at": "2026-05-19T17:00:00.000Z",
+   "id": "e7547882b47e286d161ca01d9fa048e5c1431783",
    "message": "Tactile: log drift statistics per session",
    "title": "Tactile: log drift statistics per session",
-   "web_url": "https://gitlab.com/acme/vision/-/commit/728b4deb90abe1b080d48a0ffda8c689094183ed"
+   "web_url": "https://gitlab.com/acme/vision/-/commit/e7547882b47e286d161ca01d9fa048e5c1431783"
   },
   {
    "author_email": "alice@acme.test",
    "author_name": "Alice Chen",
-   "authored_date": "2027-06-08T17:00:00.000Z",
-   "created_at": "2027-06-08T17:00:00.000Z",
-   "id": "ae90fa9dd0cdd280b7b4fc020bb22ec09e3ece02",
+   "authored_date": "2026-06-08T17:00:00.000Z",
+   "created_at": "2026-06-08T17:00:00.000Z",
+   "id": "cec6d49ff36aefd07bcff9c20bf5c37076859491",
    "message": "Harness: export per-class tables for review",
    "title": "Harness: export per-class tables for review",
-   "web_url": "https://gitlab.com/acme/vision/-/commit/ae90fa9dd0cdd280b7b4fc020bb22ec09e3ece02"
+   "web_url": "https://gitlab.com/acme/vision/-/commit/cec6d49ff36aefd07bcff9c20bf5c37076859491"
   },
   {
    "author_email": "bob@acme.test",
    "author_name": "Bob Roy",
-   "authored_date": "2027-06-16T17:00:00.000Z",
-   "created_at": "2027-06-16T17:00:00.000Z",
-   "id": "30acdf544938b3f9ef40847c2e71d84d34c05efd",
+   "authored_date": "2026-06-16T17:00:00.000Z",
+   "created_at": "2026-06-16T17:00:00.000Z",
+   "id": "f52e2cb6b3c7089f2bc45197e84737e79c04fec0",
    "message": "Tactile: retest baseline windows on worn sensors",
    "title": "Tactile: retest baseline windows on worn sensors",
-   "web_url": "https://gitlab.com/acme/vision/-/commit/30acdf544938b3f9ef40847c2e71d84d34c05efd"
+   "web_url": "https://gitlab.com/acme/vision/-/commit/f52e2cb6b3c7089f2bc45197e84737e79c04fec0"
   },
   {
    "author_email": "bob@acme.test",
    "author_name": "Bob Roy",
-   "authored_date": "2027-07-14T17:00:00.000Z",
-   "created_at": "2027-07-14T17:00:00.000Z",
-   "id": "6a46de19646f93197cace6d2ffedc3b10eb105ca",
+   "authored_date": "2026-07-14T17:00:00.000Z",
+   "created_at": "2026-07-14T17:00:00.000Z",
+   "id": "239bc4bac2ec83613f9b4cba162ceb0bb1ee3119",
    "message": "Tactile: package the detector for the next gripper build",
    "title": "Tactile: package the detector for the next gripper build",
-   "web_url": "https://gitlab.com/acme/vision/-/commit/6a46de19646f93197cace6d2ffedc3b10eb105ca"
+   "web_url": "https://gitlab.com/acme/vision/-/commit/239bc4bac2ec83613f9b4cba162ceb0bb1ee3119"
   },
   {
    "author_email": "alice@acme.test",
    "author_name": "Alice Chen",
-   "authored_date": "2027-07-20T17:00:00.000Z",
-   "created_at": "2027-07-20T17:00:00.000Z",
-   "id": "a59cc609fada7c5492c3449f0fcf3ed58b96b01c",
+   "authored_date": "2026-07-20T17:00:00.000Z",
+   "created_at": "2026-07-20T17:00:00.000Z",
+   "id": "769ceca2617c145f1e8257a033c0823c548b892d",
    "message": "Planner: document retry policy parameters",
    "title": "Planner: document retry policy parameters",
-   "web_url": "https://gitlab.com/acme/vision/-/commit/a59cc609fada7c5492c3449f0fcf3ed58b96b01c"
+   "web_url": "https://gitlab.com/acme/vision/-/commit/769ceca2617c145f1e8257a033c0823c548b892d"
   }
  ],
  "merge_requests": [
@@ -127,22 +127,22 @@
     {
      "author_email": "alice@acme.test",
      "author_name": "Alice Chen",
-     "authored_date": "2026-08-19T16:40:00.000Z",
-     "created_at": "2026-08-19T16:40:00.000Z",
-     "id": "9e1f70768323226def96de5a24b4df8c43aa68ba",
+     "authored_date": "2025-08-19T16:40:00.000Z",
+     "created_at": "2025-08-19T16:40:00.000Z",
+     "id": "489f70ddb41352f92706950a3b04bff04fe7c47b",
      "message": "Render bin scenes at fixed occlusion levels",
      "title": "Render bin scenes at fixed occlusion levels",
-     "web_url": "https://gitlab.com/acme/vision/-/commit/9e1f70768323226def96de5a24b4df8c43aa68ba"
+     "web_url": "https://gitlab.com/acme/vision/-/commit/489f70ddb41352f92706950a3b04bff04fe7c47b"
     },
     {
      "author_email": "alice@acme.test",
      "author_name": "Alice Chen",
-     "authored_date": "2026-08-21T23:10:00.000Z",
-     "created_at": "2026-08-21T23:10:00.000Z",
-     "id": "ef8e13b7d4962f735d51234fdde0855a4b49de2d",
+     "authored_date": "2025-08-21T23:10:00.000Z",
+     "created_at": "2025-08-21T23:10:00.000Z",
+     "id": "3959474ce775f6e6ebbf6cb6e658b592e6bf7345",
      "message": "Seed scene generator for repeatable trials",
      "title": "Seed scene generator for repeatable trials",
-     "web_url": "https://gitlab.com/acme/vision/-/commit/ef8e13b7d4962f735d51234fdde0855a4b49de2d"
+     "web_url": "https://gitlab.com/acme/vision/-/commit/3959474ce775f6e6ebbf6cb6e658b592e6bf7345"
     }
    ],
    "_files": [
@@ -155,7 +155,7 @@
       "username": "dwu"
      },
      "body": "Is 60% occlusion realistic for mixed bins? Asking for the experiment plan.",
-     "created_at": "2026-08-20T16:30:00.000Z",
+     "created_at": "2025-08-20T16:30:00.000Z",
      "id": 1201,
      "system": false
     },
@@ -164,7 +164,7 @@
       "username": "achen"
      },
      "body": "merged",
-     "created_at": "2026-08-22T22:00:00.000Z",
+     "created_at": "2025-08-22T22:00:00.000Z",
      "id": 1299,
      "system": true
     }
@@ -172,13 +172,13 @@
    "author": {
     "username": "achen"
    },
-   "created_at": "2026-08-19T17:00:00.000Z",
+   "created_at": "2025-08-19T17:00:00.000Z",
    "description": "Builds the bin-scene harness for this year's occlusion trials. Scenes render at 20, 40 and 60% occlusion with fixed seeds so runs repeat exactly.",
    "iid": 12,
    "labels": [
     "research"
    ],
-   "merged_at": "2026-08-22T22:00:00.000Z",
+   "merged_at": "2025-08-22T22:00:00.000Z",
    "source_branch": "feat/occlusion-harness",
    "title": "Occlusion test harness for 20/40/60% scenes",
    "web_url": "https://gitlab.com/acme/vision/-/merge_requests/12"
@@ -188,12 +188,12 @@
     {
      "author_email": "carol@diaz.test",
      "author_name": "Carol Diaz",
-     "authored_date": "2026-09-08T17:30:00.000Z",
-     "created_at": "2026-09-08T17:30:00.000Z",
-     "id": "34fe18ee56e7c206c46b35a9c562601f895a42cc",
+     "authored_date": "2025-09-08T17:30:00.000Z",
+     "created_at": "2025-09-08T17:30:00.000Z",
+     "id": "61add67c1bfe6d234cc817543aa6a85ce5f61dc4",
      "message": "Expose occlusion level and part class as parameters",
      "title": "Expose occlusion level and part class as parameters",
-     "web_url": "https://gitlab.com/acme/vision/-/commit/34fe18ee56e7c206c46b35a9c562601f895a42cc"
+     "web_url": "https://gitlab.com/acme/vision/-/commit/61add67c1bfe6d234cc817543aa6a85ce5f61dc4"
     }
    ],
    "_files": [
@@ -205,7 +205,7 @@
       "username": "achen"
      },
      "body": "Seed handling needs a fix for repeatable runs.",
-     "created_at": "2026-09-09T17:00:00.000Z",
+     "created_at": "2025-09-09T17:00:00.000Z",
      "id": 1401,
      "system": false
     },
@@ -214,7 +214,7 @@
       "username": "cdiaz"
      },
      "body": "merged",
-     "created_at": "2026-09-11T22:00:00.000Z",
+     "created_at": "2025-09-11T22:00:00.000Z",
      "id": 1499,
      "system": true
     }
@@ -222,13 +222,13 @@
    "author": {
     "username": "cdiaz"
    },
-   "created_at": "2026-09-08T18:00:00.000Z",
+   "created_at": "2025-09-08T18:00:00.000Z",
    "description": "Occlusion level and part class become harness parameters so the same scene set runs across samplers.",
    "iid": 14,
    "labels": [
     "research"
    ],
-   "merged_at": "2026-09-11T22:00:00.000Z",
+   "merged_at": "2025-09-11T22:00:00.000Z",
    "source_branch": "feat/harness-params",
    "title": "Parametrize harness occlusion levels",
    "web_url": "https://gitlab.com/acme/vision/-/merge_requests/14"
@@ -238,22 +238,22 @@
     {
      "author_email": "carol@diaz.test",
      "author_name": "Carol Diaz",
-     "authored_date": "2026-10-01T16:45:00.000Z",
-     "created_at": "2026-10-01T16:45:00.000Z",
-     "id": "4ebde1b50270ba21a94ff5b39965d1b5f1910980",
+     "authored_date": "2025-10-01T16:45:00.000Z",
+     "created_at": "2025-10-01T16:45:00.000Z",
+     "id": "f66effd9a53431108e098c4c8dd612739b8f80ab",
      "message": "Depth completion prior for sparse parts",
      "title": "Depth completion prior for sparse parts",
-     "web_url": "https://gitlab.com/acme/vision/-/commit/4ebde1b50270ba21a94ff5b39965d1b5f1910980"
+     "web_url": "https://gitlab.com/acme/vision/-/commit/f66effd9a53431108e098c4c8dd612739b8f80ab"
     },
     {
      "author_email": "carol@diaz.test",
      "author_name": "Carol Diaz",
-     "authored_date": "2026-10-05T22:30:00.000Z",
-     "created_at": "2026-10-05T22:30:00.000Z",
-     "id": "023ae0bfb59711cdb2a2473db49a126535440e6c",
+     "authored_date": "2025-10-05T22:30:00.000Z",
+     "created_at": "2025-10-05T22:30:00.000Z",
+     "id": "13708538b0b4365e245522aeacf53de1dd977105",
      "message": "Train the prior on complete scans",
      "title": "Train the prior on complete scans",
-     "web_url": "https://gitlab.com/acme/vision/-/commit/023ae0bfb59711cdb2a2473db49a126535440e6c"
+     "web_url": "https://gitlab.com/acme/vision/-/commit/13708538b0b4365e245522aeacf53de1dd977105"
     }
    ],
    "_files": [
@@ -266,7 +266,7 @@
       "username": "achen"
      },
      "body": "Closing without merge: the prior overfits on transparent parts (ACME-118).",
-     "created_at": "2026-10-14T17:30:00.000Z",
+     "created_at": "2025-10-14T17:30:00.000Z",
      "id": 1901,
      "system": false
     }
@@ -274,7 +274,7 @@
    "author": {
     "username": "cdiaz"
    },
-   "created_at": "2026-10-01T17:00:00.000Z",
+   "created_at": "2025-10-01T17:00:00.000Z",
    "description": "Adds a depth-completion prior ahead of grasp sampling. Results are tracked in ACME-118.",
    "iid": 19,
    "labels": [
@@ -290,22 +290,22 @@
     {
      "author_email": "alice@acme.test",
      "author_name": "Alice Chen",
-     "authored_date": "2026-11-05T16:00:00.000Z",
-     "created_at": "2026-11-05T16:00:00.000Z",
-     "id": "a3ff1c190a6f8567dab870d873cc751d0c9da2c2",
+     "authored_date": "2025-11-05T17:00:00.000Z",
+     "created_at": "2025-11-05T17:00:00.000Z",
+     "id": "1c4a83cdaad6779d4dde430ccdebd49ffae61454",
      "message": "Class-conditioned sampler weights",
      "title": "Class-conditioned sampler weights",
-     "web_url": "https://gitlab.com/acme/vision/-/commit/a3ff1c190a6f8567dab870d873cc751d0c9da2c2"
+     "web_url": "https://gitlab.com/acme/vision/-/commit/1c4a83cdaad6779d4dde430ccdebd49ffae61454"
     },
     {
      "author_email": "alice@acme.test",
      "author_name": "Alice Chen",
-     "authored_date": "2026-11-10T00:00:00.000Z",
-     "created_at": "2026-11-10T00:00:00.000Z",
-     "id": "c38c9fcfc3b62d71546c351ca080f83a2e50ec4b",
+     "authored_date": "2025-11-10T01:00:00.000Z",
+     "created_at": "2025-11-10T01:00:00.000Z",
+     "id": "dcfe353aa8d072038849631f9b45f34711270e7b",
      "message": "Run the comparison across all occlusion levels",
      "title": "Run the comparison across all occlusion levels",
-     "web_url": "https://gitlab.com/acme/vision/-/commit/c38c9fcfc3b62d71546c351ca080f83a2e50ec4b"
+     "web_url": "https://gitlab.com/acme/vision/-/commit/dcfe353aa8d072038849631f9b45f34711270e7b"
     }
    ],
    "_files": [
@@ -318,7 +318,7 @@
       "username": "cdiaz"
      },
      "body": "Ran the 60% set twice; variance under 3 points.",
-     "created_at": "2026-11-06T17:00:00.000Z",
+     "created_at": "2025-11-06T18:00:00.000Z",
      "id": 2301,
      "system": false
     },
@@ -327,7 +327,7 @@
       "username": "dwu"
      },
      "body": "Approved as this year's P1 baseline.",
-     "created_at": "2026-11-10T19:00:00.000Z",
+     "created_at": "2025-11-10T20:00:00.000Z",
      "id": 2302,
      "system": false
     },
@@ -336,7 +336,7 @@
       "username": "achen"
      },
      "body": "merged",
-     "created_at": "2026-11-12T21:00:00.000Z",
+     "created_at": "2025-11-12T22:00:00.000Z",
      "id": 2399,
      "system": true
     }
@@ -344,13 +344,13 @@
    "author": {
     "username": "achen"
    },
-   "created_at": "2026-11-05T16:30:00.000Z",
+   "created_at": "2025-11-05T17:30:00.000Z",
    "description": "Uses the depth prior only for thin opaque parts and visibility weighting elsewhere. Across 230 grasp trials, the hybrid sampler held 79% success at 40% occlusion and 66% at 60%; transparent parts remain the limiting class at 51% at 60% occlusion.",
    "iid": 23,
    "labels": [
     "research"
    ],
-   "merged_at": "2026-11-12T21:00:00.000Z",
+   "merged_at": "2025-11-12T22:00:00.000Z",
    "source_branch": "feat/hybrid-sampler",
    "title": "Hybrid sampler: class-conditioned weighting",
    "web_url": "https://gitlab.com/acme/vision/-/merge_requests/23"
@@ -360,22 +360,22 @@
     {
      "author_email": "bob@acme.test",
      "author_name": "Bob Roy",
-     "authored_date": "2026-11-18T16:30:00.000Z",
-     "created_at": "2026-11-18T16:30:00.000Z",
-     "id": "6acd690f08b169d56e2ba92aa6787528b921bbd5",
+     "authored_date": "2025-11-18T17:30:00.000Z",
+     "created_at": "2025-11-18T17:30:00.000Z",
+     "id": "efab0d02fd2f69165674695a4eb7ff858fef3d55",
      "message": "Stream the tactile sensor at 1 kHz",
      "title": "Stream the tactile sensor at 1 kHz",
-     "web_url": "https://gitlab.com/acme/vision/-/commit/6acd690f08b169d56e2ba92aa6787528b921bbd5"
+     "web_url": "https://gitlab.com/acme/vision/-/commit/efab0d02fd2f69165674695a4eb7ff858fef3d55"
     },
     {
      "author_email": "bob@acme.test",
      "author_name": "Bob Roy",
-     "authored_date": "2026-11-24T23:00:00.000Z",
-     "created_at": "2026-11-24T23:00:00.000Z",
-     "id": "11a69f6856eec3b050af7d9281473e8b696b516c",
+     "authored_date": "2025-11-25T00:00:00.000Z",
+     "created_at": "2025-11-25T00:00:00.000Z",
+     "id": "748981bce92a6cdc522106985e451cf95eaa7558",
      "message": "Align tactile and controller clocks",
      "title": "Align tactile and controller clocks",
-     "web_url": "https://gitlab.com/acme/vision/-/commit/11a69f6856eec3b050af7d9281473e8b696b516c"
+     "web_url": "https://gitlab.com/acme/vision/-/commit/748981bce92a6cdc522106985e451cf95eaa7558"
     }
    ],
    "_files": [
@@ -388,7 +388,7 @@
       "username": "broy"
      },
      "body": "merged",
-     "created_at": "2026-11-25T22:00:00.000Z",
+     "created_at": "2025-11-25T23:00:00.000Z",
      "id": 2499,
      "system": true
     }
@@ -396,13 +396,13 @@
    "author": {
     "username": "broy"
    },
-   "created_at": "2026-11-18T17:00:00.000Z",
+   "created_at": "2025-11-18T18:00:00.000Z",
    "description": "Streams the fingertip sensor at 1 kHz with timestamps aligned to the gripper controller.",
    "iid": 24,
    "labels": [
     "research"
    ],
-   "merged_at": "2026-11-25T22:00:00.000Z",
+   "merged_at": "2025-11-25T23:00:00.000Z",
    "source_branch": "feat/tactile-capture",
    "title": "Tactile capture pipeline at 1 kHz",
    "web_url": "https://gitlab.com/acme/vision/-/merge_requests/24"
@@ -412,22 +412,22 @@
     {
      "author_email": "bob@acme.test",
      "author_name": "Bob Roy",
-     "authored_date": "2026-12-16T16:30:00.000Z",
-     "created_at": "2026-12-16T16:30:00.000Z",
-     "id": "6e8cd94e0b4b4dcb5f824245cfe3959de4300684",
+     "authored_date": "2025-12-16T17:30:00.000Z",
+     "created_at": "2025-12-16T17:30:00.000Z",
+     "id": "83b194c75fac795c1d5e23675395a1df3d42c423",
      "message": "Per-sensor fixed slip threshold",
      "title": "Per-sensor fixed slip threshold",
-     "web_url": "https://gitlab.com/acme/vision/-/commit/6e8cd94e0b4b4dcb5f824245cfe3959de4300684"
+     "web_url": "https://gitlab.com/acme/vision/-/commit/83b194c75fac795c1d5e23675395a1df3d42c423"
     },
     {
      "author_email": "bob@acme.test",
      "author_name": "Bob Roy",
-     "authored_date": "2026-12-19T00:00:00.000Z",
-     "created_at": "2026-12-19T00:00:00.000Z",
-     "id": "9c2beb4b5411bac12f4dd213b96f1e71d0ec38db",
+     "authored_date": "2025-12-19T01:00:00.000Z",
+     "created_at": "2025-12-19T01:00:00.000Z",
+     "id": "e51d15d9ce3c6d97f4788985d30e0807d5bc86e2",
      "message": "Measure false positives over 3-hour runs",
      "title": "Measure false positives over 3-hour runs",
-     "web_url": "https://gitlab.com/acme/vision/-/commit/9c2beb4b5411bac12f4dd213b96f1e71d0ec38db"
+     "web_url": "https://gitlab.com/acme/vision/-/commit/e51d15d9ce3c6d97f4788985d30e0807d5bc86e2"
     }
    ],
    "_files": [
@@ -439,7 +439,7 @@
       "username": "achen"
      },
      "body": "Agree to drop it; the drift moves the baseline itself.",
-     "created_at": "2026-12-21T18:00:00.000Z",
+     "created_at": "2025-12-21T19:00:00.000Z",
      "id": 2601,
      "system": false
     }
@@ -447,7 +447,7 @@
    "author": {
     "username": "broy"
    },
-   "created_at": "2026-12-16T17:00:00.000Z",
+   "created_at": "2025-12-16T18:00:00.000Z",
    "description": "Per-sensor fixed thresholds. False positives still reached 22% after 3 hours as the baseline drifted, so this approach is abandoned in favour of adaptive compensation.",
    "iid": 26,
    "labels": [
@@ -463,22 +463,22 @@
     {
      "author_email": "bob@acme.test",
      "author_name": "Bob Roy",
-     "authored_date": "2027-02-01T16:30:00.000Z",
-     "created_at": "2027-02-01T16:30:00.000Z",
-     "id": "4e5478b57bb1d67ce1992433f98d411a57e6b26f",
+     "authored_date": "2026-02-01T17:30:00.000Z",
+     "created_at": "2026-02-01T17:30:00.000Z",
+     "id": "051a542de5582002f469eeda92e73d4c7d25f5e9",
      "message": "Per-taxel moving-average baseline",
      "title": "Per-taxel moving-average baseline",
-     "web_url": "https://gitlab.com/acme/vision/-/commit/4e5478b57bb1d67ce1992433f98d411a57e6b26f"
+     "web_url": "https://gitlab.com/acme/vision/-/commit/051a542de5582002f469eeda92e73d4c7d25f5e9"
     },
     {
      "author_email": "bob@acme.test",
      "author_name": "Bob Roy",
-     "authored_date": "2027-02-12T22:00:00.000Z",
-     "created_at": "2027-02-12T22:00:00.000Z",
-     "id": "c5c22ab2e8b0cedf0551f5b462e5dba6d33bf068",
+     "authored_date": "2026-02-12T23:00:00.000Z",
+     "created_at": "2026-02-12T23:00:00.000Z",
+     "id": "b12978738bf2fc2074382c63d10005c79dcff0c9",
      "message": "Compare 30 s and 120 s baseline windows",
      "title": "Compare 30 s and 120 s baseline windows",
-     "web_url": "https://gitlab.com/acme/vision/-/commit/c5c22ab2e8b0cedf0551f5b462e5dba6d33bf068"
+     "web_url": "https://gitlab.com/acme/vision/-/commit/b12978738bf2fc2074382c63d10005c79dcff0c9"
     }
    ],
    "_files": [
@@ -491,7 +491,7 @@
       "username": "achen"
      },
      "body": "Window length looks like the main variable; try 30 s and 120 s.",
-     "created_at": "2027-02-05T17:00:00.000Z",
+     "created_at": "2026-02-05T18:00:00.000Z",
      "id": 2801,
      "system": false
     },
@@ -500,7 +500,7 @@
       "username": "broy"
      },
      "body": "merged",
-     "created_at": "2027-02-20T21:00:00.000Z",
+     "created_at": "2026-02-20T22:00:00.000Z",
      "id": 2899,
      "system": true
     }
@@ -508,13 +508,13 @@
    "author": {
     "username": "broy"
    },
-   "created_at": "2027-02-01T17:00:00.000Z",
+   "created_at": "2026-02-01T18:00:00.000Z",
    "description": "A slow moving-average baseline per taxel, subtracted before spectral features (ACME-133).",
    "iid": 28,
    "labels": [
     "research"
    ],
-   "merged_at": "2027-02-20T21:00:00.000Z",
+   "merged_at": "2026-02-20T22:00:00.000Z",
    "source_branch": "feat/adaptive-baseline",
    "title": "Adaptive baseline drift compensation",
    "web_url": "https://gitlab.com/acme/vision/-/merge_requests/28"
@@ -524,22 +524,22 @@
     {
      "author_email": "carol@diaz.test",
      "author_name": "Carol Diaz",
-     "authored_date": "2027-03-08T16:30:00.000Z",
-     "created_at": "2027-03-08T16:30:00.000Z",
-     "id": "ede592397b721dd1cd9c41fbd0d35aa4bbca8af1",
+     "authored_date": "2026-03-08T16:30:00.000Z",
+     "created_at": "2026-03-08T16:30:00.000Z",
+     "id": "46995e12d713feb59151d1ace63c68ca5a79eb76",
      "message": "Re-scan after a failed grasp",
      "title": "Re-scan after a failed grasp",
-     "web_url": "https://gitlab.com/acme/vision/-/commit/ede592397b721dd1cd9c41fbd0d35aa4bbca8af1"
+     "web_url": "https://gitlab.com/acme/vision/-/commit/46995e12d713feb59151d1ace63c68ca5a79eb76"
     },
     {
      "author_email": "carol@diaz.test",
      "author_name": "Carol Diaz",
-     "authored_date": "2027-03-18T21:00:00.000Z",
-     "created_at": "2027-03-18T21:00:00.000Z",
-     "id": "432003da3ab803755272d622119e52838ac3bf4e",
+     "authored_date": "2026-03-18T21:00:00.000Z",
+     "created_at": "2026-03-18T21:00:00.000Z",
+     "id": "3a2a78f90b7368aef4ad6ab412d3653bcfff3bc0",
      "message": "Measure recovery per re-scan count",
      "title": "Measure recovery per re-scan count",
-     "web_url": "https://gitlab.com/acme/vision/-/commit/432003da3ab803755272d622119e52838ac3bf4e"
+     "web_url": "https://gitlab.com/acme/vision/-/commit/3a2a78f90b7368aef4ad6ab412d3653bcfff3bc0"
     }
    ],
    "_files": [
@@ -551,7 +551,7 @@
       "username": "cdiaz"
      },
      "body": "merged",
-     "created_at": "2027-03-25T23:00:00.000Z",
+     "created_at": "2026-03-25T23:00:00.000Z",
      "id": 3199,
      "system": true
     }
@@ -559,13 +559,13 @@
    "author": {
     "username": "cdiaz"
    },
-   "created_at": "2027-03-08T17:00:00.000Z",
+   "created_at": "2026-03-08T17:00:00.000Z",
    "description": "A single re-scan after a failed grasp, measured on the transparent-part scene set (ACME-140).",
    "iid": 31,
    "labels": [
     "research"
    ],
-   "merged_at": "2027-03-25T23:00:00.000Z",
+   "merged_at": "2026-03-25T23:00:00.000Z",
    "source_branch": "feat/retry-policy",
    "title": "Retry policy experiment",
    "web_url": "https://gitlab.com/acme/vision/-/merge_requests/31"
@@ -575,12 +575,12 @@
     {
      "author_email": "bob@acme.test",
      "author_name": "Bob Roy",
-     "authored_date": "2027-04-14T16:30:00.000Z",
-     "created_at": "2027-04-14T16:30:00.000Z",
-     "id": "ed7949d598bfa1f0119f16df6ec9500805643102",
+     "authored_date": "2026-04-14T16:30:00.000Z",
+     "created_at": "2026-04-14T16:30:00.000Z",
+     "id": "d4172b0be4a480d0f09f8f59528bab5f7976f0c5",
      "message": "Profile detection latency on the controller",
      "title": "Profile detection latency on the controller",
-     "web_url": "https://gitlab.com/acme/vision/-/commit/ed7949d598bfa1f0119f16df6ec9500805643102"
+     "web_url": "https://gitlab.com/acme/vision/-/commit/d4172b0be4a480d0f09f8f59528bab5f7976f0c5"
     }
    ],
    "_files": [
@@ -592,7 +592,7 @@
       "username": "achen"
      },
      "body": "p95 latency is 27 ms on the controller build.",
-     "created_at": "2027-04-20T22:00:00.000Z",
+     "created_at": "2026-04-20T22:00:00.000Z",
      "id": 3301,
      "system": false
     },
@@ -601,7 +601,7 @@
       "username": "broy"
      },
      "body": "merged",
-     "created_at": "2027-04-22T19:00:00.000Z",
+     "created_at": "2026-04-22T19:00:00.000Z",
      "id": 3399,
      "system": true
     }
@@ -609,13 +609,13 @@
    "author": {
     "username": "broy"
    },
-   "created_at": "2027-04-14T17:00:00.000Z",
+   "created_at": "2026-04-14T17:00:00.000Z",
    "description": "Profiles end-to-end detection latency on the gripper controller.",
    "iid": 33,
    "labels": [
     "research"
    ],
-   "merged_at": "2027-04-22T19:00:00.000Z",
+   "merged_at": "2026-04-22T19:00:00.000Z",
    "source_branch": "feat/latency-profile",
    "title": "Slip detector latency profiling",
    "web_url": "https://gitlab.com/acme/vision/-/merge_requests/33"
@@ -625,12 +625,12 @@
     {
      "author_email": "alice@acme.test",
      "author_name": "Alice Chen",
-     "authored_date": "2027-05-12T15:45:00.000Z",
-     "created_at": "2027-05-12T15:45:00.000Z",
-     "id": "60000ae042eb6b09b99f4d81d85cb16971a572a2",
+     "authored_date": "2026-05-12T15:45:00.000Z",
+     "created_at": "2026-05-12T15:45:00.000Z",
+     "id": "37b100e5febf12f183e57ad71c0b4c04f9ff34ef",
      "message": "Export per-class result tables",
      "title": "Export per-class result tables",
-     "web_url": "https://gitlab.com/acme/vision/-/commit/60000ae042eb6b09b99f4d81d85cb16971a572a2"
+     "web_url": "https://gitlab.com/acme/vision/-/commit/37b100e5febf12f183e57ad71c0b4c04f9ff34ef"
     }
    ],
    "_files": [
@@ -643,7 +643,7 @@
       "username": "achen"
      },
      "body": "merged",
-     "created_at": "2027-05-14T19:00:00.000Z",
+     "created_at": "2026-05-14T19:00:00.000Z",
      "id": 3799,
      "system": true
     }
@@ -651,11 +651,11 @@
    "author": {
     "username": "achen"
    },
-   "created_at": "2027-05-12T16:00:00.000Z",
+   "created_at": "2026-05-12T16:00:00.000Z",
    "description": "Consolidates this year's harness changes and exports the per-class result tables.",
    "iid": 37,
    "labels": [],
-   "merged_at": "2027-05-14T19:00:00.000Z",
+   "merged_at": "2026-05-14T19:00:00.000Z",
    "source_branch": "chore/harness-cleanup",
    "title": "Occlusion results write-up and harness cleanup",
    "web_url": "https://gitlab.com/acme/vision/-/merge_requests/37"

@@ -7,12 +7,12 @@ provinces = ["BC"]
 timezone = "America/Vancouver"
 
 [fiscal_year]
-start = 2026-08-01
-end = 2027-07-31
+start = 2025-08-01
+end = 2026-07-31
 
 [claim]
 first_claim = false
-prior_filings = ["prior/FY2026-T661-Part2.md"]
+prior_filings = ["prior/FY2025-T661-Part2.md"]
 prior_titles = ["Adaptive Grasp Planning Under Occlusion"]
 field_codes = ["2.02.09"]
 scenario = ""             # locked in Phase 3
@@ -53,7 +53,7 @@ kind = "code"
 tool = "gitlab"
 method = "api"            # pre-captured into evidence/raw/gitlab/ by generate.py; the API is never called
 projects = ["acme/vision", "acme/website"]
-subscription_end = 2027-12-31
+subscription_end = 2026-12-31
 issue_key_regex = 'ACME-\d+'
 
 [[sources]]
@@ -63,7 +63,7 @@ tool = "jira"
 method = "export"
 export_path = "exports/jira.csv"
 mapping = "jira-csv"
-subscription_end = 2027-10-31
+subscription_end = 2026-10-31
 issue_key_regex = 'ACME-\d+'
 
 [[sources]]

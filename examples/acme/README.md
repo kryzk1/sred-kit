@@ -1,11 +1,11 @@
 # Acme Robotics: example claim folder
 
-A fictional claim for Acme Robotics Inc., fiscal year 2026-08-01 to 2027-07-31. Every person, number and event is invented. It runs on a different stack from most teams' defaults on purpose: GitLab, Jira (CSV export) and Slack (export folder).
+A fictional claim for Acme Robotics Inc., fiscal year 2025-08-01 to 2026-07-31. Every person, number and event is invented. It runs on a different stack from most teams' defaults on purpose: GitLab, Jira (CSV export) and Slack (export folder).
 
 | Path | What it is |
 |---|---|
 | `sred.toml`, `roster.csv` | A completed onboarding: company, fiscal year, sources, people and pay |
-| `prior/FY2026-T661-Part2.md` | The prior year's filing for the continuing project |
+| `prior/FY2025-T661-Part2.md` | The prior year's filing for the continuing project |
 | `evidence/raw/gitlab/` | GitLab merge requests and commits in the shape `capture.py gitlab` writes. They are pre-captured: the API is never called |
 | `exports/jira.csv`, `exports/slack/` | Tool exports, converted by the `jira-csv` and `slack-export` presets |
 | `generate.py` | Regenerates the raw files and exports deterministically |
