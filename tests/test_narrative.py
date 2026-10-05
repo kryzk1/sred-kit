@@ -127,3 +127,9 @@ def test_cli_reports_counts_and_exit_code(make_claim, capsys):
     assert "Line 242: 16/350 words" in out and "0 errors" in out
     (d / "narrative.md").write_text(text(l242=" ".join(["word"] * 351)))
     assert check.main(["narrative", str(d / "narrative.md")]) == 1
+
+
+def test_company_scoped_wording_in_242_is_flagged_low(cfg):
+    l242 = "It was uncertain whether the sampler could keep success above the baseline under our constraints [C1]."
+    hits = [f for f in run(cfg, text(l242=l242))[0] if f.rule == "M-W15b"]
+    assert [(f.where, f.severity) for f in hits] == [("242", "info")]

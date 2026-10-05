@@ -120,6 +120,13 @@ severity = "high"
 hint = "company-scoped; phrase the advancement for a class of systems"
 
 [[pattern]]
+id = "M-W15b"
+regex = '\bour (architecture|platform|system|environment|implementation|constraints)\b'
+scope = ["242"]
+severity = "low"
+hint = "company-scoped framing; 'these constraints', or name the class of systems (a preparer changed 'under our constraints' to 'under these constraints')"
+
+[[pattern]]
 id = "M-W16"
 regex = '\b(held|without loss|parity|validated|proven|proved|guarantee[sd]?|fully autonomous)\b'
 scope = ["244", "246"]
