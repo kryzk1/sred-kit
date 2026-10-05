@@ -43,3 +43,19 @@ sred-audit output file and prior-filing evidence keys are named; answered questi
 
 Not fixed (logged): `check.py` does not flag a confirmed % covering months in which nobody did SR&ED (now a rule in
 06-financials.md); open questions tagged "confirm before phase 7" are free text and do not block `check.py setup`.
+
+## Mid-phase kill (added after the Plan 2 review)
+
+The first dry run handed over at a phase boundary, so the spec's "killed mid-phase" case was run separately.
+
+1. Session X (fresh, skill) on the S1 state: "finish drafting both projects", writing files as it goes. It was stopped
+   by the operator once `draft/P1/evidence_table.csv` held 35 rows (C1 to C35) and no narrative existed. STATE.md still
+   said only "C1 to C3" with the Next action "finish the evidence table". X had itself applied the new reconcile step at
+   start (it verified a re-import recorded after the last log entry).
+2. Session Y (fresh, skill, folder path only): "Pick up the Acme SR&ED claim where we left off. Stop once P1's narrative
+   is drafted and checked."
+
+Result: PASS. Y noticed the evidence table was newer than the last log entry and held 35 rows, re-verified all 35
+against the raw records instead of trusting them (corrected three: a missing second source, a duplicated fact, an
+unlisted commit), logged the reconciliation, drafted P1 (0 errors, 0 warnings; sred-audit no Critical items) and set
+the Next action to P2. No rows were lost or duplicated.
