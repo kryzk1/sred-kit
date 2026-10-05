@@ -1,0 +1,22 @@
+tool = "trello"
+kind = "tracker"
+format = "json"
+verified = true
+records = "actions"
+key = "id"
+container = "data.board.name"
+title = "data.card.name"
+date_formats = ["iso"]
+
+[[events]]
+kind = "issue_created"
+when = { field = "type", equals = "createCard" }
+date = "date"
+actor = "memberCreator.username"
+
+[[events]]
+kind = "issue_comment"
+when = { field = "type", equals = "commentCard" }
+date = "date"
+actor = "memberCreator.username"
+excerpt = "data.text"

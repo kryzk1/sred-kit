@@ -1,0 +1,5 @@
+# Slack: Workspace settings > Import/Export Data > Export. Point export_path at the zip or the unzipped folder.
+tool = "slack"
+kind = "chat"
+format = "slack-export"
+verified = true

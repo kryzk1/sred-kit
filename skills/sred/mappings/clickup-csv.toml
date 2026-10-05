@@ -1,0 +1,26 @@
+# ClickUp: view menu > Export > CSV. Assignees arrive as "[Name, Name]"; the first is credited.
+tool = "clickup"
+kind = "tracker"
+format = "csv"
+verified = false
+date_formats = ["epoch_ms", "%m/%d/%Y, %I:%M:%S %p", "iso"]
+key = "Task ID"
+container = ["List Name", "Folder Name", "Space Name"]
+title = "Task Name"
+tags = ["Status", "Tags"]
+
+[[events]]
+kind = "issue_created"
+key_suffix = ""
+date = "Date Created"
+actor = "Assignees"
+actor_strip = "[]"
+actor_split = ","
+excerpt = "Task Content"
+
+[[events]]
+kind = "issue_resolved"
+date = "Date Closed"
+actor = "Assignees"
+actor_strip = "[]"
+actor_split = ","

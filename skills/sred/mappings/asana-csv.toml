@@ -1,0 +1,24 @@
+# Asana: project menu > Export/Print > CSV. Has no creator column, so created tasks are credited to the assignee.
+tool = "asana"
+kind = "tracker"
+format = "csv"
+verified = false
+date_formats = ["%Y-%m-%d", "iso", "%m/%d/%Y"]
+key = "Task ID"
+container = ["Projects", "Section/Column"]
+title = "Name"
+tags = ["Tags", "Section/Column"]
+
+[[events]]
+kind = "issue_created"
+key_suffix = ""
+date = "Created At"
+actor = "Assignee"
+actor_email = "Assignee Email"
+excerpt = "Notes"
+
+[[events]]
+kind = "issue_resolved"
+date = "Completed At"
+actor = "Assignee"
+actor_email = "Assignee Email"

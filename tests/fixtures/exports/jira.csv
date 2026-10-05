@@ -1,0 +1,3 @@
+Summary,Issue key,Issue id,Issue Type,Status,Project key,Assignee,Reporter,Created,Resolved,Labels,Labels,Description,Comment,Comment
+Test grasp planner under occlusion,ACME-12,10012,Story,Done,ACME,Bob Roy,Alice Chen,03/Sep/26 9:05 AM,20/Sep/26 4:30 PM,research,vision,Hypothesis: occlusion-aware sampling beats ACME-7 baseline,05/Sep/26 11:00 AM;5b10ac;First run failed at 40% occlusion,06/Sep/26 2:00 PM;Alice Chen;Retrying with depth prior
+Old ticket,ACME-3,10003,Bug,Done,ACME,Bob Roy,Bob Roy,01/Jun/26 9:00 AM,02/Jun/26 9:00 AM,,,Before the fiscal year,,

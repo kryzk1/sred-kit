@@ -1,0 +1,34 @@
+# Linear: Settings > Workspace > Import/Export > Export CSV. Has no comments: prefer capture.py linear while the API is live.
+tool = "linear"
+kind = "tracker"
+format = "csv"
+verified = true
+date_formats = ["js", "iso"]
+key = "ID"
+container = ["Project", "Team"]
+title = "Title"
+tags = ["Status", "Labels", "Team"]
+
+[[events]]
+kind = "issue_created"
+key_suffix = ""
+date = "Created"
+actor = "Creator"
+excerpt = "Description"
+
+[[events]]
+kind = "issue_state_change"
+key_suffix = ":started"
+date = "Started"
+actor = "Assignee"
+
+[[events]]
+kind = "issue_resolved"
+date = "Completed"
+actor = "Assignee"
+
+[[events]]
+kind = "issue_state_change"
+key_suffix = ":canceled"
+date = "Canceled"
+actor = "Assignee"

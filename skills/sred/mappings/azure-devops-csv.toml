@@ -1,0 +1,21 @@
+# Azure DevOps Boards: run a query with these columns, then Export to CSV.
+tool = "azure-devops"
+kind = "tracker"
+format = "csv"
+verified = false
+date_formats = ["%m/%d/%Y %I:%M:%S %p", "%m/%d/%Y %I:%M %p", "iso"]
+key = "ID"
+container = ["Area Path", "Iteration Path"]
+title = "Title"
+tags = ["Work Item Type", "State", "Tags"]
+
+[[events]]
+kind = "issue_created"
+key_suffix = ""
+date = "Created Date"
+actor = "Created By"
+
+[[events]]
+kind = "issue_resolved"
+date = "Closed Date"
+actor = "Assigned To"

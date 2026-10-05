@@ -1,0 +1,26 @@
+column,field
+Name,name
+Company (if appl),company
+Classification,classification_label
+Employees in BC/Can,in_canada
+10% S/H,specified_employee
+Title/Role,title
+Street Address,street
+City,city
+Province,province
+Postal,postal
+Country,country
+Total Hours,paid_hours
+Total Wages (Paid FY),wages_paid
+Total Wages (Earned FY),wages_earned
+Bonus,bonus
+TX Benefits,taxable_benefits
+Pay in Lieu,pay_in_lieu
+SR&ED Eligible,sred_eligible
+SR&ED in Contract,sred_in_contract
+Contract Provided,contract_provided
+Arm's Length,arms_length
+SRED %,sred_pct
+SRED Hours,sred_hours
+SRED Wages,sred_wages
+Basis,basis
