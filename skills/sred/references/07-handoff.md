@@ -8,7 +8,7 @@ Assemble what goes to the accountant and check it.
    - `evidence_index.csv`: every cited marker with its source key and raw path
    - `labour_summary.csv`
    - `decision_log.md`: the locked decisions from `STATE.md`
-   - `gaps.md` (only if absent): open questions and financial flags. Edit it to add anything else the accountant should know, such as review findings carried past round 2, eligibility answers other than "none", and contractor documents still outstanding.
+   - `gaps.md`: anything you wrote there earlier (review findings carried past round 2, eligibility answers other than "none", contractor documents still outstanding) is kept, and a generated block of open questions and financial flags is refreshed on every build.
 3. Write `handoff/README.md`, one page for the accountant:
    - what each file is
    - the fiscal year, the projects (continuation or new) and the scenario chosen

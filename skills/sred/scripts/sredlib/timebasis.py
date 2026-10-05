@@ -368,11 +368,13 @@ def run(claim_dir: Path, scenario: str | None = None, preliminary: bool = False)
     fin = claim_dir / "financials"
     out_dir = claim_dir / "scope" / "preliminary" / scenario if preliminary else fin
     cls = config.classification(cfg)
-    ledger = sorted(classify(rows, cls["rules"], _read_csv(fin / "classification_overrides.csv"), cls["review_threshold"]),
+    # Preliminary (Phase 3) figures use classification rules only: overrides and gap bases belong to Phase 6.
+    overrides = [] if preliminary else _read_csv(fin / "classification_overrides.csv")
+    ledger = sorted(classify(rows, cls["rules"], overrides, cls["review_threshold"]),
                     key=lambda e: (e["date"], e["source"], e["key"]))
     months = monthly(ledger, scenario, config.kind_weights(cfg))
     gaps = [(r["id"], m) for r in roster for m in employed_months(r, fy) if not (months.get((r["id"], m)) or {}).get("evidence_days")]
-    gap_rows, gap_leftovers = merge_gaps(_read_csv(fin / "gap_months.csv"), gaps)
+    gap_rows, gap_leftovers = merge_gaps([] if preliminary else _read_csv(fin / "gap_months.csv"), gaps)
     previous = [] if preliminary else _read_csv(fin / "person_summary.csv")
     roster_ids = {r["id"] for r in roster}
     person_leftovers = [p for p in previous if p.get("person") not in roster_ids

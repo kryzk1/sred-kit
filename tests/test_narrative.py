@@ -90,11 +90,12 @@ def test_section_a_rules(cfg):
     assert {"M-L06", "M-L07", "M-L10"} <= {f.rule for f in run(cfg, text(a=a))[0]}
 
 
-def test_start_before_fiscal_year_requires_continuation(cfg):
+def test_first_claim_starting_before_fiscal_year_is_a_warning(cfg):
     a = (SECTION_A.replace("2026-09-02", "2026-05-01").replace("- 208 Continuation: yes", "- 208 Continuation: no")
          .replace("- 210 First claim: no", "- 210 First claim: yes"))
     findings, _ = run(cfg, text(a=a))
-    assert any(f.severity == "error" and "requires Line 208" in f.message for f in findings)
+    hits = [f for f in findings if "never claimed" in f.message]
+    assert [f.severity for f in hits] == ["warning"]  # a project begun in an unclaimed earlier year keeps its real start
 
 
 def test_late_dates_and_missing_contractor_statement(cfg):

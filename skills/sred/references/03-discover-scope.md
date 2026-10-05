@@ -60,7 +60,9 @@ Anyone (claimant, reviewer, you) can propose a change; only the claimant ratifie
 ```
 - D7 (proposed, awaiting <ratifier>): supersedes D2. Change: <what>. Reason: <why>.
   Risks: <e.g. a start date equal to the fiscal-year start is a review flag; a continuation's title and start must match the prior filing>.
-  Regenerate if ratified: scope/projects.toml, draft/P1/*, time basis (time_basis.py), handoff/.
+  Regenerate if ratified: scope/projects.toml, draft/P1/*, project ids in sred.toml rules and
+  financials/classification_overrides.csv, confirmed_pct of affected people (clear and re-confirm),
+  time basis (time_basis.py), handoff/.
 ```
 
 Do not edit `scope/projects.toml`, narratives or financials for it until it is ratified. When ratified, mark it locked, regenerate the listed artifacts, and log it.

@@ -11,7 +11,7 @@ Builds the largest SR&ED claim the evidence supports: T661 Part 2 per project an
 
 ## Start here
 
-1. In the claim folder, if `STATE.md` exists, read it first and continue from `phase:` and `## Next action`. Otherwise begin Phase 1.
+1. In the claim folder, if `STATE.md` exists, read it first and continue from `phase:` and `## Next action`. Otherwise begin Phase 1. Files changed after the last log entry mean a session stopped mid-step: verify or redo that work, log it, then continue.
 2. At the start of every phase run `python3 <skill-dir>/scripts/check.py setup --claim . --phase N`. Resolve, or log as an open question, anything that blocks phase N.
 3. Read the reference file for the current phase (table below) before doing that phase's work.
 4. After every step, update `STATE.md`: `phase:`, phase log, open questions tagged `(blocks phase N)` (move answered ones to the log), `## Next action`.
