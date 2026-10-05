@@ -103,3 +103,15 @@ def test_cli_gates_on_current_phase(make_claim, capsys):
     assert check.main(["setup", "--claim", str(claim)]) == 1
     assert "2 missing; 2 block phase 6." in capsys.readouterr().out
     assert check.main(["setup", "--claim", str(claim), "--phase", "3"]) == 0
+
+
+def test_captured_api_source_no_longer_needs_credentials(make_claim, monkeypatch):
+    from sredlib import manifest
+
+    monkeypatch.delenv("GITLAB_TOKEN", raising=False)
+    claim = make_claim('[[sources]]\nname = "gl"\nkind = "code"\ntool = "gitlab"\nmethod = "api"\nprojects = ["acme/vision"]\n', roster=ROSTER)
+    raw = claim / "evidence/raw/gl/acme__vision.json"
+    raw.parent.mkdir(parents=True)
+    raw.write_text("{}")
+    manifest.record(claim, "gl", method="api", files=[raw], counts={"merge_requests": 0})
+    assert "GITLAB_TOKEN" not in "\n".join(map(str, setupcheck.check_setup(claim)[0]))

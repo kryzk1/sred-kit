@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import calendar
+import json
 import os
 import re
 from dataclasses import dataclass
@@ -76,7 +77,7 @@ def _num(v: str) -> bool:
     return True
 
 
-def _check_sources(cfg: dict, missing: list[Missing]) -> None:
+def _check_sources(cfg: dict, missing: list[Missing], captured: set[str]) -> None:
     T = "sred.toml"
     srcs = config.sources(cfg)
     if not any(s.get("kind") == "code" for s in srcs):
@@ -97,7 +98,7 @@ def _check_sources(cfg: dict, missing: list[Missing]) -> None:
                 missing.append(Missing(2, where, f"no API adapter for tool {tool!r}; use export or connector"))
             for key, default in CREDENTIAL_ENVS.get(tool, []):
                 env = s.get(key, default)
-                if not os.environ.get(env):
+                if s.get("name") not in captured and not os.environ.get(env):  # once captured, access may lapse
                     missing.append(Missing(2, where, f"environment variable {env} is not set"))
             if tool == "github" and _blank(s.get("org")) and _blank(s.get("repos")):
                 missing.append(Missing(2, where, "org or repos"))
@@ -165,7 +166,9 @@ def check_setup(claim_dir: Path) -> tuple[list[Missing], list[str]]:
         info.append(f"Filing deadline: {filing_deadline(end).isoformat()} (fiscal year end + 18 months)")
     except config.ConfigError as exc:
         missing.append(Missing(2, T, f"fiscal_year: {exc}"))
-    _check_sources(cfg, missing)
+    manifest = claim_dir / "evidence" / "raw" / "MANIFEST.json"
+    captured = set(json.loads(manifest.read_text(encoding="utf-8")).get("sources", {})) if manifest.exists() else set()
+    _check_sources(cfg, missing, captured)
     _check_roster(claim_dir, missing)
     if not isinstance(_get(cfg, "claim.first_claim"), bool):
         missing.append(Missing(3, T, "claim.first_claim: true or false"))
