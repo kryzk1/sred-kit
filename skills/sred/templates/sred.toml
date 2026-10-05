@@ -34,6 +34,7 @@ government_assistance = ""
 client_contract_work = ""
 funded_by_others = ""
 work_outside_canada = ""
+collaboration = ""        # work done jointly with other businesses (Line 218)
 
 [payroll]
 total_wages_earned = 0.0  # employees' earned wages for the fiscal year from payroll (no contractors)

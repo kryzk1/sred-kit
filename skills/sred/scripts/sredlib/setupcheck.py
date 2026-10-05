@@ -173,7 +173,7 @@ def check_setup(claim_dir: Path) -> tuple[list[Missing], list[str]]:
     if not isinstance(_get(cfg, "claim.first_claim"), bool):
         missing.append(Missing(3, T, "claim.first_claim: true or false"))
     elif not cfg["claim"]["first_claim"]:
-        need(3, "claim.prior_filings", "prior T661 Part 2 filings (PDF paths)")
+        need(3, "claim.prior_filings", "prior T661 Part 2 filings (paths to PDF or text copies)")
         need(3, "claim.prior_titles", "project titles exactly as previously filed")
         for p in _get(cfg, "claim.prior_filings") or []:
             if not config.resolve_path(cfg, p).exists():

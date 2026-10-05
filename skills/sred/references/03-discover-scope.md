@@ -8,7 +8,8 @@ Group every row of `evidence/index/activity.csv` into work clusters: first by ob
 
 `cluster,description,person_months,rows,status,exclusion_reason,evidence_keys`
 
-- `status` is `candidate` or `excluded`. Every `excluded` row has a reason (routine development, bot maintenance, sales or demo, prior project's tail work, business planning, and so on).
+- `person_months`: the number of distinct (person, month) pairs with at least one row in the cluster.
+- `status` is `candidate`, `borderline` (defensible but contestable; counted only in the maximum scenario through `level = "borderline"` rules) or `excluded`. Every `excluded` row has a reason (routine development, bot maintenance, sales or demo, prior project's tail work, business planning, and so on).
 - Treat `scope/claimant_context.md` and the claimant's "not SR&ED" preferences as leads: check each against the evidence before excluding or including.
 - Keep **directly supporting work** with the experiment it served: harnesses, data collection, test rigs, instrumentation built for an experiment. This is the work claims most often miss.
 
@@ -22,7 +23,7 @@ Read every filing in `prior/`. For each candidate project:
 
 ## 3. Candidate projects
 
-For each: title, Line 202/204 dates with their evidence keys, continuation or new, field code (keep the prior code unless the technology changed), the uncertainty hypothesis in one sentence, the clusters it covers (direct and supporting), and the main evidence keys. Unrelated lines of inquiry are separate projects; one project needs one shared technological question.
+Write them at the top of `scope/scenarios.md`. For each: title, Line 202/204 dates with their evidence keys, continuation or new, field code (keep the prior code unless the technology changed), the uncertainty hypothesis in one sentence, the clusters it covers (direct and supporting), and the main evidence keys. Unrelated lines of inquiry are separate projects; one project needs one shared technological question.
 
 ## 4. Scenarios (`scope/scenarios.md`)
 
@@ -35,6 +36,10 @@ Write classification rules into `sred.toml` (`[[classification.rules]]`: `id`, `
 | conservative | `direct` only; ignores `weight=summary` rows; gap months at 0% |
 | balanced | adds `support`; gap months only with a corroborated basis |
 | maximum | adds `borderline`; gap months with any claimant basis |
+
+Preliminary runs do not use gap-month bases or classification overrides (those arrive in Phase 6), so gap months count as 0% in every Phase 3 scenario and the maximum figure is a floor.
+
+People with thin records (executives, managers, product) can get a high proposed % from a handful of SR&ED-labelled records; `SPARSE_EVIDENCE` marks them. Show their figures with that caveat; a lower confirmed % with a written basis is more credible.
 
 `scope/scenarios.md` shows for each: the projects and clusters, per-person proposed % (from `scope/preliminary/<scenario>/person_summary.csv`), eligible employee wages and contractor amounts and the ITC estimate (from `scenario_<name>.json`), and each weak point a reviewer would attack with the dollars at risk. Recommend one and say why.
 

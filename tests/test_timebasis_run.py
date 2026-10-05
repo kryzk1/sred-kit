@@ -159,3 +159,12 @@ def test_payroll_reconciles_against_employees_only(make_claim):
     timebasis.run(claim)
     checks = (claim / "financials/financial_checks.md").read_text()
     assert "Payroll reconciliation: OK (payroll 100000.00, employees in roster 100000.00)" in checks
+
+
+def test_sparse_evidence_is_flagged():
+    ceo = person(id="dana", name="Dana Wu", classification="employee", in_canada="Y", start="2025-08-01", end="2026-01-31")
+    months = {("dana", f"2025-{m:02d}"): {"evidence_days": 1, "sred_days": 1.0, "by_project": {}} for m in (8, 9, 10, 11, 12)}
+    s = by_person(timebasis.summarize([ceo], months, [], (date(2025, 8, 1), date(2026, 7, 31)), "balanced", []))
+    assert "SPARSE_EVIDENCE" in s["dana"]["flags"]
+    dense = {("alice", m): {"evidence_days": 10, "sred_days": 8.0, "by_project": {}} for m in timebasis.month_range(*FY)}
+    assert "SPARSE_EVIDENCE" not in by_person(timebasis.summarize([ALICE], dense, [], FY, "balanced", []))["alice"]["flags"]

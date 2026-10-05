@@ -9,7 +9,7 @@ What each field of Form T661 Part 2 needs, and where the kit keeps it. One Part 
 | 200 | Project title (and ID code if any) | `projects.toml` `title`; narrative `- 200` | A continuation copies the prior filing's title exactly |
 | 202 | Start date (YYYY-MM-DD) | `start`; `- 202` | A continuation copies the prior filing's start date. A new project: the earliest record of the hypothesis or recognized uncertainty, never the fiscal-year start by default |
 | 204 | Completion or expected completion date | `end`; `- 204` | The evidenced end, or the expected end if work continues. Don't leave a date that umbrellas later years without reason |
-| 206 | Field of science or technology code (X.XX.XX, see the guide) | `field_code`; `- 206` | Keep the prior code unless the technology changed |
+| 206 | Field of science or technology code (X.XX.XX) | `field_code`; `- 206` | Keep the prior code unless the technology changed. For a new project, pick from the code list in CRA's guide to Form T661 (T4088) and confirm with the accountant |
 | 208 | Continuation of a previously claimed project | `continuation = true`; `- 208 Continuation: yes` | Exactly one of 208 and 210 |
 | 210 | First claim for the project | `continuation = false`; `- 210 First claim: yes` | Needs a genuinely new uncertainty set; write a demarcation note if a related project just ended |
 | 218, 220, 221 | Work done jointly or in collaboration with other businesses; their names and business numbers | `eligibility.collaboration` | Flag for the accountant |

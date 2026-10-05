@@ -19,12 +19,22 @@ from sredlib.http import Http, HttpError
 TOOLS = ["github", "gitlab", "linear", "jira", "git-log"]
 
 
+def _captured(claim: Path, name: str) -> dict | None:
+    mpath = manifest_path(claim)
+    if not mpath.exists():
+        return None
+    return json.loads(mpath.read_text(encoding="utf-8")).get("sources", {}).get(name)
+
+
 def check_source(claim: Path, src: dict, http) -> tuple[bool, str]:
     method = src.get("method")
     if method == "api":
         try:
             return True, get_adapter(src.get("tool", "")).check(src, http)
         except (CaptureError, HttpError, KeyError) as exc:
+            entry = _captured(claim, src.get("name", ""))
+            if entry:  # access often lapses after capture; the raw files are the record
+                return True, f"already captured {entry.get('captured_at', '')[:10]}; live access not needed ({exc})"
             return False, str(exc)
     if method == "export":
         p = Path(src.get("export_path", ""))

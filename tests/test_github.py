@@ -79,3 +79,15 @@ def test_check_source_variants(tmp_path, fake_http, monkeypatch):
     ok, msg = capture.check_source(tmp_path, {"name": "g", "method": "git-log", "paths": ["nope"]}, http)
     assert not ok and "nope" in msg
     assert capture.check_source(tmp_path, {"name": "n", "method": "connector"}, http)[0]
+
+
+def test_check_source_accepts_captured_api_source_without_access(tmp_path, fake_http, monkeypatch):
+    from sredlib import manifest
+
+    monkeypatch.delenv("GITLAB_TOKEN", raising=False)
+    raw = tmp_path / "evidence/raw/gl/x.json"
+    raw.parent.mkdir(parents=True)
+    raw.write_text("{}")
+    manifest.record(tmp_path, "gl", method="api", files=[raw], counts={})
+    ok, msg = capture.check_source(tmp_path, {"name": "gl", "method": "api", "tool": "gitlab", "projects": ["a/b"]}, fake_http([]))
+    assert ok and "already captured" in msg

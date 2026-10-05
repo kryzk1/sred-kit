@@ -232,6 +232,7 @@ def summarize(roster, months, gap_rows, fy, scenario, previous, use_confirmed: b
             "evidence_share": f"{(100 * sred_days / ev_days) if ev_days else 0:.2f}", "proposed_pct": f"{proposed:.2f}",
             "confirmed_pct": p.get("confirmed_pct", "") or "", "basis": p.get("basis", "") or "",
             "override_reason": p.get("override_reason", "") or "", "flags": "",
+            "_evidence_days": ev_days,
         })
     _flag(out, roster)
     return out
@@ -261,6 +262,9 @@ def _flag(summary: list[dict], roster: list[dict]) -> None:
             flags.append("OVERRIDE_NO_REASON")
         if pct > 0 and s["months_with_evidence"] < 3:
             flags.append("THIN_EVIDENCE")
+        if pct > 0 and s["months_employed"] and s.pop("_evidence_days", 0) / s["months_employed"] < 2:
+            flags.append("SPARSE_EVIDENCE")  # a share built on a record or two a month says little about time spent
+        s.pop("_evidence_days", None)
         s["flags"] = ";".join(flags)
 
 

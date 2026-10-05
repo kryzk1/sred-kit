@@ -33,6 +33,7 @@ From activity to each person's confirmed SR&ED %, then the accountant's labour s
 | `OVER_90_NO_BASIS` | above 90% with no basis | write the basis or lower it |
 | `OVERRIDE_NO_REASON` | confirmed differs from proposed by more than 15 points with no reason | write the reason |
 | `THIN_EVIDENCE` | fewer than 3 months with evidence | basis from other records, or accept a lower % |
+| `SPARSE_EVIDENCE` | fewer than 2 evidence-days per employed month | the share rests on a few records; set the confirmed % from a written basis, usually lower |
 | `OUTSIDE_CANADA` | claimed work outside Canada | usually not eligible; tell the accountant |
 | `DUAL_ROLE` | the same person is both employee and contractor | make sure no time is costed twice |
 
