@@ -60,3 +60,11 @@ All four scenarios pass in both runs with the skill. No new rationalizations app
 added. The skill's measurable effects: no premature locking (S2), the superseding procedure with a regenerate list and
 named review flag (S4), continuation title and start date applied (S1, S4), and formats stated so agents no longer
 probe the checker with scratch files.
+
+## Onboarding test (spec §8.3)
+
+Fresh subagent with the skill, S2 state, corrected answers-acme.md. `check.py setup` afterwards printed exactly two
+`MISSING` lines, both `[phase 6]` (Bob's `paid_hours`, `payroll.total_wages_earned`), and STATE.md lists both as open
+questions tagged `(blocks phase 6)`. PASS. The agent also wrote a one-page onboarding summary for approval, kept the
+scenario as a preference, and questioned the example manifest's "pre-captured example data" note (expected: it is
+example data).
