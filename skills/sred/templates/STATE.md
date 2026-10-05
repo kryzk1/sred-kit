@@ -5,6 +5,9 @@ updated: YYYY-MM-DD
 ## Locked decisions
 (none yet)
 
+## Preferences (not decisions)
+(none yet)
+
 ## Open questions for the claimant
 (none yet)
 

@@ -20,12 +20,12 @@ Answers the claimant gives during onboarding. Anything not covered here, the cla
 - Alice Chen: employee, Lead Robotics Engineer, all year, in Canada, not a shareholder. GitLab `achen`, Slack `U0ACHEN`, alice@acme.test. 2,080 paid hours, $125,000.00 paid and earned, no bonus, $600 taxable benefits.
 - Bob Roy: employee, Robotics Developer, started 2025-10-15, in Canada, not a shareholder. GitLab `broy`, Slack `U0BROY`, bob@acme.test. $80,000.00 paid and earned, no bonus, $400 taxable benefits.
 - Dana Wu: employee, CEO, all year, in Canada, owns more than 10% of the shares. GitLab `dwu`, Slack `U0DWU`, dana@acme.test. 2,080 paid hours, $130,000.00 paid and earned, no bonus, $600 taxable benefits.
-- Carol Diaz: contractor through Diaz Robotics, 2025-09-01 to 2026-03-31, in Canada, arm's length, contract provided, the contract does not mention SR&ED. GitLab `cdiaz`, Slack `U0CDIAZ`, carol@diaz.test. Invoiced $42,000.00 for the year, all paid in the year.
-- In Jira everyone appears under their full name.
+- Carol Diaz: contractor through Diaz Robotics, 2025-09-01 to 2026-03-31, in Canada, arm's length, not a shareholder or related to one, contract provided, the contract does not mention SR&ED. GitLab `cdiaz`, Slack `U0CDIAZ`, carol@diaz.test. Invoiced $42,000.00 for the year, all paid in the year.
+- No one received pay in lieu. In Jira everyone appears under their full name.
 
 ## Tools
 - GitLab, projects `acme/vision` and `acme/website`. Already captured into `evidence/raw/gitlab/` before our token was revoked; the subscription ends 2026-12-31.
-- Jira: CSV export (all fields) saved at `exports/jira.csv`. Issue keys look like ACME-123. Subscription ends 2026-10-31.
+- Jira: CSV export (all fields) saved at `exports/jira.csv`; it is complete for the year (we only use Jira for research tickets and bugs, so there are few). Issue keys look like ACME-123. Subscription ends 2026-10-31.
 - Slack (Pro plan): workspace export unzipped at `exports/slack`.
 - No meeting-notes tool.
 
