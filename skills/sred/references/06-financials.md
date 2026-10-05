@@ -39,6 +39,8 @@ From activity to each person's confirmed SR&ED %, then the accountant's labour s
 
 People with thin code trails (executives, managers, product) can be raised above their evidence share only with a written basis tied to records, such as experiment reviews they ran.
 
+`THIN_EVIDENCE` and `SPARSE_EVIDENCE` describe the evidence, so they stay while the person is claimed; they are resolved by a written `basis` (and `override_reason` when the % differs from the proposal). Don't confirm a % that covers months in which nobody did SR&ED.
+
 ## 4. Labour summary and checks
 
 `time_basis.py` writes `financials/labour_summary.csv` in the accountant's columns (`templates/labour-summary-columns.csv`, or `preparer.labour_template`) and `financials/financial_checks.md`:

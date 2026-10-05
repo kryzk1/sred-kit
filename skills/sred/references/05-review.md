@@ -1,6 +1,6 @@
 # Phase 5: Review
 
-Two independent reviews per round, at most two rounds. Each reviewer is a fresh subagent that never sees the drafting conversation or your reasons, only the files listed.
+Two independent reviews per round, at most two rounds. Each reviewer is a fresh subagent that never sees the drafting conversation or your reasons, only the files listed. Run Phase 6 first when you can, so the red-team sees the confirmed percentages and the labour summary.
 
 ## Red-team (`draft/review/redteam-r<n>.md`)
 
@@ -13,7 +13,9 @@ ground to deny or reduce it. Read only these files:
 - Prior filings: <claim>/prior/*
 - Scope: <claim>/scope/projects.toml, <claim>/scope/demarcation.md
 - Do-not patterns: <skill-dir>/references/do-not.md
-- Per-person percentages, if present: <claim>/financials/person_summary.csv
+- Per-person percentages and pay, if present: <claim>/financials/person_summary.csv, <claim>/financials/labour_summary.csv
+- Round 2 only: <claim>/draft/review/triage-r1.md. Do not repeat a finding rejected there unless the
+  narrative changed in a way that revives it; say why if you do.
 Do not read evidence tables, STATE.md or any other file.
 
 Write <claim>/draft/review/redteam-r<n>.md with three sections:

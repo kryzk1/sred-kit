@@ -7,7 +7,7 @@ One narrative per project in `draft/<P>/`. Evidence first, prose second, checks 
 Columns: `claim_id,statement,source_key,raw_path,verified`
 
 - One row per fact a narrative will rely on: each figure, result, failed approach, hypothesis, date and person.
-- `source_key` is the durable key from `activity.csv` (`repo#123`, `group/project!12`, a full commit SHA, `ACME-118:issue_comment:1`, `channel:ts`) or a prior filing.
+- `source_key` is the durable key from `activity.csv` (`repo#123`, `group/project!12`, a full commit SHA, `ACME-118:issue_comment:1`, `channel:ts`), or for a prior filing `prior/<file>#Line246` with `raw_path` set to that file.
 - Open the raw file and confirm the statement says what the record says before setting `verified=Y`. A figure that cannot be found in a raw record does not go in the narrative.
 - A figure the claimant remembers is a lead: search for it, and if the evidence differs, use the evidence and tell the claimant both numbers.
 
@@ -53,5 +53,5 @@ What each line holds (the rubric is in `sred-audit`; the judgment patterns are i
 ## 3. Check and audit
 
 1. `python3 <skill-dir>/scripts/check.py narrative draft/<P>/narrative.md` until it reports 0 errors. Read every warning: each is a pattern from `do-not-patterns.toml` or a mechanical rule. Fix it or note why it stands.
-2. Run the `sred-audit` skill on the narrative. Fix every Critical item. Record the score in the phase log; it is a quality floor, not approval.
+2. Run the `sred-audit` skill on the narrative and save its output to `draft/<P>/audit.md`. Fix every Critical item. Record the score in the phase log; it is a quality floor, not approval.
 3. Log the project as drafted. After every project: `phase: 5-review`.
