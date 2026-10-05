@@ -1,0 +1,76 @@
+# Fictional example claim. Acme Robotics Inc., its people, numbers and events are invented.
+
+[company]
+name = "Acme Robotics Inc."
+ccpc = true
+provinces = ["BC"]
+timezone = "America/Vancouver"
+
+[fiscal_year]
+start = 2026-08-01
+end = 2027-07-31
+
+[claim]
+first_claim = false
+prior_filings = ["prior/FY2026-T661-Part2.md"]
+prior_titles = ["Adaptive Grasp Planning Under Occlusion"]
+field_codes = ["2.02.09"]
+scenario = ""             # locked in Phase 3
+
+[preparer]
+accountant = "Pat Lee"
+firm = "Lee & Partners CPA"
+labour_template = ""
+third_party_preparer = false
+ratifier = "CEO"
+
+[eligibility]
+government_assistance = "none"
+client_contract_work = "none"
+funded_by_others = "none"
+work_outside_canada = "none"
+
+[payroll]
+total_wages_earned = 335000.00  # employees only
+
+[limits]
+mode = "words"
+
+[classification]
+review_threshold = 0.7
+
+[rates]
+itc_rate = 0.35
+proxy_rate = 0.55
+contract_rate = 0.80
+
+[identity]
+bots = []
+
+[[sources]]
+name = "gitlab"
+kind = "code"
+tool = "gitlab"
+method = "api"            # pre-captured into evidence/raw/gitlab/ by generate.py; the API is never called
+projects = ["acme/vision", "acme/website"]
+subscription_end = 2027-12-31
+issue_key_regex = 'ACME-\d+'
+
+[[sources]]
+name = "jira"
+kind = "tracker"
+tool = "jira"
+method = "export"
+export_path = "exports/jira.csv"
+mapping = "jira-csv"
+subscription_end = 2027-10-31
+issue_key_regex = 'ACME-\d+'
+
+[[sources]]
+name = "slack"
+kind = "chat"
+tool = "slack"
+method = "export"
+export_path = "exports/slack"
+mapping = "slack-export"
+plan = "pro"

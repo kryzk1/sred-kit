@@ -1,0 +1,5 @@
+id,name,classification,company,title,start,end,in_canada,specified_employee,aliases,paid_hours,wages_paid,wages_earned,bonus,taxable_benefits,pay_in_lieu,arms_length,contract_provided,sred_in_contract,street,city,province,postal,country
+alice,Alice Chen,employee,Acme Robotics Inc.,Lead Robotics Engineer,,,Y,N,gitlab:achen;jira:Alice Chen;slack:U0ACHEN;email:alice@acme.test,2080,125000.00,125000.00,0.00,600.00,0.00,,,,,,,,CANADA
+bob,Bob Roy,employee,Acme Robotics Inc.,Robotics Developer,2026-10-15,,Y,N,gitlab:broy;jira:Bob Roy;slack:U0BROY;email:bob@acme.test,1520,80000.00,80000.00,0.00,400.00,0.00,,,,,,,,CANADA
+dana,Dana Wu,employee,Acme Robotics Inc.,Chief Executive Officer,,,Y,Y,gitlab:dwu;jira:Dana Wu;slack:U0DWU;email:dana@acme.test,2080,130000.00,130000.00,0.00,600.00,0.00,,,,,,,,CANADA
+carol,Carol Diaz,contractor,Diaz Robotics,Contract Robotics Developer,2026-09-01,2027-03-31,Y,N,gitlab:cdiaz;jira:Carol Diaz;slack:U0CDIAZ;email:carol@diaz.test,,42000.00,42000.00,,,,Y,Y,N,,,,,CANADA

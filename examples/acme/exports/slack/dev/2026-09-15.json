@@ -1,0 +1,33 @@
+[
+ {
+  "reply_count": 2,
+  "text": "Visibility-weighted sampling drops to 61% at 60% occlusion. The decline isn't gradual: failures cluster on thin metal and transparent parts.",
+  "thread_ts": "1789493400.000100",
+  "ts": "1789493400.000100",
+  "type": "message",
+  "user": "U0ACHEN",
+  "user_profile": {
+   "real_name": "Alice Chen"
+  }
+ },
+ {
+  "text": "Thin parts barely return depth points at that occlusion. Try a learned depth prior for those classes?",
+  "thread_ts": "1789493400.000100",
+  "ts": "1789494720.000200",
+  "type": "message",
+  "user": "U0CDIAZ",
+  "user_profile": {
+   "real_name": "Carol Diaz"
+  }
+ },
+ {
+  "text": "Yes, open a branch and track it under ACME-118.",
+  "thread_ts": "1789493400.000100",
+  "ts": "1789495500.000200",
+  "type": "message",
+  "user": "U0ACHEN",
+  "user_profile": {
+   "real_name": "Alice Chen"
+  }
+ }
+]

@@ -1,0 +1,32 @@
+{
+ "sources": {
+  "gitlab": {
+   "captured_at": "2027-08-02T00:00:00+00:00",
+   "counts": {
+    "commits": 31,
+    "merge_requests": 14,
+    "projects": 2
+   },
+   "date_range": [
+    "2026-07-30",
+    "2027-08-02"
+   ],
+   "files": [
+    {
+     "bytes": 21952,
+     "path": "evidence/raw/gitlab/acme__vision.json",
+     "sha256": "1f005d24a6847682db3bfb132e45ed441a62593310e1346807ae2b25f3cf52b8"
+    },
+    {
+     "bytes": 12485,
+     "path": "evidence/raw/gitlab/acme__website.json",
+     "sha256": "8549788976d9c39f5ea57b55fcb78d103c60a9a9881246d19b6e53e2288fb8d8"
+    }
+   ],
+   "method": "api",
+   "notes": [
+    "pre-captured example data written by examples/acme/generate.py; the GitLab API was not called"
+   ]
+  }
+ }
+}

@@ -1,0 +1,38 @@
+[
+ {
+  "id": "U0ACHEN",
+  "name": "achen",
+  "profile": {
+   "email": "alice@acme.test",
+   "real_name": "Alice Chen"
+  },
+  "real_name": "Alice Chen"
+ },
+ {
+  "id": "U0BROY",
+  "name": "broy",
+  "profile": {
+   "email": "bob@acme.test",
+   "real_name": "Bob Roy"
+  },
+  "real_name": "Bob Roy"
+ },
+ {
+  "id": "U0DWU",
+  "name": "dwu",
+  "profile": {
+   "email": "dana@acme.test",
+   "real_name": "Dana Wu"
+  },
+  "real_name": "Dana Wu"
+ },
+ {
+  "id": "U0CDIAZ",
+  "name": "cdiaz",
+  "profile": {
+   "email": "carol@diaz.test",
+   "real_name": "Carol Diaz"
+  },
+  "real_name": "Carol Diaz"
+ }
+]
