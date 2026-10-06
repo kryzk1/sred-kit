@@ -91,12 +91,13 @@ def test_build_then_check_passes_once_readme_exists(make_claim):
     assert handoff.check(claim) == []
 
 
-def test_gaps_file_is_never_overwritten(make_claim):
+def test_hand_written_gaps_notes_are_kept(make_claim):
     claim = make(make_claim)
     (claim / "handoff").mkdir()
     (claim / "handoff/gaps.md").write_text("edited by hand\n")
-    assert "gaps.md" not in handoff.build(claim)
-    assert (claim / "handoff/gaps.md").read_text() == "edited by hand\n"
+    assert "gaps.md" in handoff.build(claim)
+    text = (claim / "handoff/gaps.md").read_text()
+    assert text.startswith("edited by hand\n") and "Q1: confirm the contractor" in text
 
 
 def test_consistency_errors(make_claim):

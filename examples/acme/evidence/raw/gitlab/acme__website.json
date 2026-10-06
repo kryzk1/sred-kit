@@ -1,0 +1,362 @@
+{
+ "commits": [
+  {
+   "author_email": "bot@renovateapp.com",
+   "author_name": "renovate[bot]",
+   "authored_date": "2025-08-06T10:00:00.000Z",
+   "created_at": "2025-08-06T10:00:00.000Z",
+   "id": "1ffd883af675ad294527377f3d8b0a870799a023",
+   "message": "chore(deps): update dependency next to v15",
+   "title": "chore(deps): update dependency next to v15",
+   "web_url": "https://gitlab.com/acme/website/-/commit/1ffd883af675ad294527377f3d8b0a870799a023"
+  },
+  {
+   "author_email": "bot@renovateapp.com",
+   "author_name": "renovate[bot]",
+   "authored_date": "2025-09-06T10:00:00.000Z",
+   "created_at": "2025-09-06T10:00:00.000Z",
+   "id": "3107e5452f63c1bc41cad105b8f0454d7a909ac0",
+   "message": "chore(deps): update dependency next to v15",
+   "title": "chore(deps): update dependency next to v15",
+   "web_url": "https://gitlab.com/acme/website/-/commit/3107e5452f63c1bc41cad105b8f0454d7a909ac0"
+  },
+  {
+   "author_email": "bot@renovateapp.com",
+   "author_name": "renovate[bot]",
+   "authored_date": "2025-10-06T10:00:00.000Z",
+   "created_at": "2025-10-06T10:00:00.000Z",
+   "id": "0284ca81a422a3a21b310bd9e69fd7342faa96cb",
+   "message": "chore(deps): update dependency next to v15",
+   "title": "chore(deps): update dependency next to v15",
+   "web_url": "https://gitlab.com/acme/website/-/commit/0284ca81a422a3a21b310bd9e69fd7342faa96cb"
+  },
+  {
+   "author_email": "bob@acme.test",
+   "author_name": "Bob Roy",
+   "authored_date": "2025-11-03T19:00:00.000Z",
+   "created_at": "2025-11-03T19:00:00.000Z",
+   "id": "fcc81e5fd6109bc32306798b91659238d92caa94",
+   "message": "Website: copy updates",
+   "title": "Website: copy updates",
+   "web_url": "https://gitlab.com/acme/website/-/commit/fcc81e5fd6109bc32306798b91659238d92caa94"
+  },
+  {
+   "author_email": "bot@renovateapp.com",
+   "author_name": "renovate[bot]",
+   "authored_date": "2025-11-06T11:00:00.000Z",
+   "created_at": "2025-11-06T11:00:00.000Z",
+   "id": "33d7c753f3aec5c4a257ad97ed9267b2e15a7b4b",
+   "message": "chore(deps): update dependency next to v15",
+   "title": "chore(deps): update dependency next to v15",
+   "web_url": "https://gitlab.com/acme/website/-/commit/33d7c753f3aec5c4a257ad97ed9267b2e15a7b4b"
+  },
+  {
+   "author_email": "bob@acme.test",
+   "author_name": "Bob Roy",
+   "authored_date": "2025-12-03T19:00:00.000Z",
+   "created_at": "2025-12-03T19:00:00.000Z",
+   "id": "4e8e3339602cde437e024c6536798e156ad42173",
+   "message": "Website: copy updates",
+   "title": "Website: copy updates",
+   "web_url": "https://gitlab.com/acme/website/-/commit/4e8e3339602cde437e024c6536798e156ad42173"
+  },
+  {
+   "author_email": "bot@renovateapp.com",
+   "author_name": "renovate[bot]",
+   "authored_date": "2025-12-06T11:00:00.000Z",
+   "created_at": "2025-12-06T11:00:00.000Z",
+   "id": "24da454923f89fb65662666c800c5a00212f0646",
+   "message": "chore(deps): update dependency next to v15",
+   "title": "chore(deps): update dependency next to v15",
+   "web_url": "https://gitlab.com/acme/website/-/commit/24da454923f89fb65662666c800c5a00212f0646"
+  },
+  {
+   "author_email": "bob@acme.test",
+   "author_name": "Bob Roy",
+   "authored_date": "2026-01-03T19:00:00.000Z",
+   "created_at": "2026-01-03T19:00:00.000Z",
+   "id": "892d3e51c725cce78dc3a7c5bcc4c29334c73843",
+   "message": "Website: copy updates",
+   "title": "Website: copy updates",
+   "web_url": "https://gitlab.com/acme/website/-/commit/892d3e51c725cce78dc3a7c5bcc4c29334c73843"
+  },
+  {
+   "author_email": "bot@renovateapp.com",
+   "author_name": "renovate[bot]",
+   "authored_date": "2026-01-06T11:00:00.000Z",
+   "created_at": "2026-01-06T11:00:00.000Z",
+   "id": "3ee02702e9b05d8c9b3beb913ac4fadd2309cedd",
+   "message": "chore(deps): update dependency next to v15",
+   "title": "chore(deps): update dependency next to v15",
+   "web_url": "https://gitlab.com/acme/website/-/commit/3ee02702e9b05d8c9b3beb913ac4fadd2309cedd"
+  },
+  {
+   "author_email": "bob@acme.test",
+   "author_name": "Bob Roy",
+   "authored_date": "2026-02-03T19:00:00.000Z",
+   "created_at": "2026-02-03T19:00:00.000Z",
+   "id": "aebfb7fffd2ee242e01a307fdede180c4099df17",
+   "message": "Website: copy updates",
+   "title": "Website: copy updates",
+   "web_url": "https://gitlab.com/acme/website/-/commit/aebfb7fffd2ee242e01a307fdede180c4099df17"
+  },
+  {
+   "author_email": "bot@renovateapp.com",
+   "author_name": "renovate[bot]",
+   "authored_date": "2026-02-06T11:00:00.000Z",
+   "created_at": "2026-02-06T11:00:00.000Z",
+   "id": "b446c868a9f44fe14e8f0bd33d91f37c1113ec13",
+   "message": "chore(deps): update dependency next to v15",
+   "title": "chore(deps): update dependency next to v15",
+   "web_url": "https://gitlab.com/acme/website/-/commit/b446c868a9f44fe14e8f0bd33d91f37c1113ec13"
+  },
+  {
+   "author_email": "bot@renovateapp.com",
+   "author_name": "renovate[bot]",
+   "authored_date": "2026-03-06T11:00:00.000Z",
+   "created_at": "2026-03-06T11:00:00.000Z",
+   "id": "00f0dde0e0af2ca198f932349162a4ee8eef484d",
+   "message": "chore(deps): update dependency next to v15",
+   "title": "chore(deps): update dependency next to v15",
+   "web_url": "https://gitlab.com/acme/website/-/commit/00f0dde0e0af2ca198f932349162a4ee8eef484d"
+  },
+  {
+   "author_email": "bob@acme.test",
+   "author_name": "Bob Roy",
+   "authored_date": "2026-04-03T18:00:00.000Z",
+   "created_at": "2026-04-03T18:00:00.000Z",
+   "id": "fe4f9230bffc1cec1c1cd753e187813bc8214ccc",
+   "message": "Website: copy updates",
+   "title": "Website: copy updates",
+   "web_url": "https://gitlab.com/acme/website/-/commit/fe4f9230bffc1cec1c1cd753e187813bc8214ccc"
+  },
+  {
+   "author_email": "bot@renovateapp.com",
+   "author_name": "renovate[bot]",
+   "authored_date": "2026-04-06T10:00:00.000Z",
+   "created_at": "2026-04-06T10:00:00.000Z",
+   "id": "54ed3f25cb318b76543a72723bca81795ef76b97",
+   "message": "chore(deps): update dependency next to v15",
+   "title": "chore(deps): update dependency next to v15",
+   "web_url": "https://gitlab.com/acme/website/-/commit/54ed3f25cb318b76543a72723bca81795ef76b97"
+  },
+  {
+   "author_email": "bot@renovateapp.com",
+   "author_name": "renovate[bot]",
+   "authored_date": "2026-05-06T10:00:00.000Z",
+   "created_at": "2026-05-06T10:00:00.000Z",
+   "id": "8e07a812c0937129e380711666990f9c0a0bfc48",
+   "message": "chore(deps): update dependency next to v15",
+   "title": "chore(deps): update dependency next to v15",
+   "web_url": "https://gitlab.com/acme/website/-/commit/8e07a812c0937129e380711666990f9c0a0bfc48"
+  },
+  {
+   "author_email": "bob@acme.test",
+   "author_name": "Bob Roy",
+   "authored_date": "2026-06-03T18:00:00.000Z",
+   "created_at": "2026-06-03T18:00:00.000Z",
+   "id": "20fbec9d97ad437e24e5556edc94edcdfb59fd67",
+   "message": "Website: copy updates",
+   "title": "Website: copy updates",
+   "web_url": "https://gitlab.com/acme/website/-/commit/20fbec9d97ad437e24e5556edc94edcdfb59fd67"
+  },
+  {
+   "author_email": "bot@renovateapp.com",
+   "author_name": "renovate[bot]",
+   "authored_date": "2026-06-06T10:00:00.000Z",
+   "created_at": "2026-06-06T10:00:00.000Z",
+   "id": "94505730e2ea136a099eba9f367abbab652d46e8",
+   "message": "chore(deps): update dependency next to v15",
+   "title": "chore(deps): update dependency next to v15",
+   "web_url": "https://gitlab.com/acme/website/-/commit/94505730e2ea136a099eba9f367abbab652d46e8"
+  },
+  {
+   "author_email": "bob@acme.test",
+   "author_name": "Bob Roy",
+   "authored_date": "2026-07-03T18:00:00.000Z",
+   "created_at": "2026-07-03T18:00:00.000Z",
+   "id": "65465c57779dd6bd7ea338dd70b9b354217b411e",
+   "message": "Website: copy updates",
+   "title": "Website: copy updates",
+   "web_url": "https://gitlab.com/acme/website/-/commit/65465c57779dd6bd7ea338dd70b9b354217b411e"
+  },
+  {
+   "author_email": "bot@renovateapp.com",
+   "author_name": "renovate[bot]",
+   "authored_date": "2026-07-06T10:00:00.000Z",
+   "created_at": "2026-07-06T10:00:00.000Z",
+   "id": "c3d13f21cf25244be73ea36139147f6ebf7e1eae",
+   "message": "chore(deps): update dependency next to v15",
+   "title": "chore(deps): update dependency next to v15",
+   "web_url": "https://gitlab.com/acme/website/-/commit/c3d13f21cf25244be73ea36139147f6ebf7e1eae"
+  }
+ ],
+ "merge_requests": [
+  {
+   "_commits": [
+    {
+     "author_email": "bob@acme.test",
+     "author_name": "Bob Roy",
+     "authored_date": "2025-10-20T16:30:00.000Z",
+     "created_at": "2025-10-20T16:30:00.000Z",
+     "id": "92064519fb49bad73bff7da92c1bcb67f93faec4",
+     "message": "Pricing page copy",
+     "title": "Pricing page copy",
+     "web_url": "https://gitlab.com/acme/website/-/commit/92064519fb49bad73bff7da92c1bcb67f93faec4"
+    }
+   ],
+   "_files": [
+    "pages/pricing.tsx"
+   ],
+   "_notes": [
+    {
+     "author": {
+      "username": "broy"
+     },
+     "body": "merged",
+     "created_at": "2025-10-21T19:00:00.000Z",
+     "id": 599,
+     "system": true
+    }
+   ],
+   "author": {
+    "username": "broy"
+   },
+   "created_at": "2025-10-20T17:00:00.000Z",
+   "description": "Copy changes from marketing.",
+   "iid": 5,
+   "labels": [
+    "website"
+   ],
+   "merged_at": "2025-10-21T19:00:00.000Z",
+   "source_branch": "content/pricing",
+   "title": "Update pricing page copy",
+   "web_url": "https://gitlab.com/acme/website/-/merge_requests/5"
+  },
+  {
+   "_commits": [
+    {
+     "author_email": "dana@acme.test",
+     "author_name": "Dana Wu",
+     "authored_date": "2025-11-28T17:30:00.000Z",
+     "created_at": "2025-11-28T17:30:00.000Z",
+     "id": "49450d8ab1ad04a64cc7d716896e483a27b3b921",
+     "message": "Customer logo strip",
+     "title": "Customer logo strip",
+     "web_url": "https://gitlab.com/acme/website/-/commit/49450d8ab1ad04a64cc7d716896e483a27b3b921"
+    }
+   ],
+   "_files": [
+    "pages/index.tsx",
+    "public/logos/northwind.svg"
+   ],
+   "_notes": [
+    {
+     "author": {
+      "username": "dwu"
+     },
+     "body": "merged",
+     "created_at": "2025-11-29T20:00:00.000Z",
+     "id": 699,
+     "system": true
+    }
+   ],
+   "author": {
+    "username": "dwu"
+   },
+   "created_at": "2025-11-28T18:00:00.000Z",
+   "description": "Logo strip for the home page.",
+   "iid": 6,
+   "labels": [
+    "website"
+   ],
+   "merged_at": "2025-11-29T20:00:00.000Z",
+   "source_branch": "content/logos",
+   "title": "Add customer logos to the home page",
+   "web_url": "https://gitlab.com/acme/website/-/merge_requests/6"
+  },
+  {
+   "_commits": [
+    {
+     "author_email": "bob@acme.test",
+     "author_name": "Bob Roy",
+     "authored_date": "2026-03-03T17:30:00.000Z",
+     "created_at": "2026-03-03T17:30:00.000Z",
+     "id": "ae4bd10b25fa2c2b7f9ce36af5fd55c8ba0996b9",
+     "message": "Honeypot field on contact form",
+     "title": "Honeypot field on contact form",
+     "web_url": "https://gitlab.com/acme/website/-/commit/ae4bd10b25fa2c2b7f9ce36af5fd55c8ba0996b9"
+    }
+   ],
+   "_files": [
+    "pages/contact.tsx"
+   ],
+   "_notes": [
+    {
+     "author": {
+      "username": "broy"
+     },
+     "body": "merged",
+     "created_at": "2026-03-04T00:00:00.000Z",
+     "id": 799,
+     "system": true
+    }
+   ],
+   "author": {
+    "username": "broy"
+   },
+   "created_at": "2026-03-03T18:00:00.000Z",
+   "description": "Adds a honeypot field.",
+   "iid": 7,
+   "labels": [
+    "website"
+   ],
+   "merged_at": "2026-03-04T00:00:00.000Z",
+   "source_branch": "fix/contact-spam",
+   "title": "Contact form spam filter",
+   "web_url": "https://gitlab.com/acme/website/-/merge_requests/7"
+  },
+  {
+   "_commits": [
+    {
+     "author_email": "bob@acme.test",
+     "author_name": "Bob Roy",
+     "authored_date": "2026-05-05T16:30:00.000Z",
+     "created_at": "2026-05-05T16:30:00.000Z",
+     "id": "9510086982326251f84dba6ea12860e16e8b65f1",
+     "message": "Grasping demo blog post",
+     "title": "Grasping demo blog post",
+     "web_url": "https://gitlab.com/acme/website/-/commit/9510086982326251f84dba6ea12860e16e8b65f1"
+    }
+   ],
+   "_files": [
+    "content/blog/grasping-demo.md"
+   ],
+   "_notes": [
+    {
+     "author": {
+      "username": "broy"
+     },
+     "body": "merged",
+     "created_at": "2026-05-06T19:00:00.000Z",
+     "id": 899,
+     "system": true
+    }
+   ],
+   "author": {
+    "username": "broy"
+   },
+   "created_at": "2026-05-05T17:00:00.000Z",
+   "description": "Publishes the demo write-up.",
+   "iid": 8,
+   "labels": [
+    "website"
+   ],
+   "merged_at": "2026-05-06T19:00:00.000Z",
+   "source_branch": "content/blog",
+   "title": "Blog: grasping demo post",
+   "web_url": "https://gitlab.com/acme/website/-/merge_requests/8"
+  }
+ ],
+ "project": "acme/website"
+}

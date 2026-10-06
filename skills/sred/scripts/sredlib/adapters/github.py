@@ -56,6 +56,18 @@ def _repos(source: dict, http, headers) -> list[str]:
     return sorted(r["full_name"] for r in _paged(http, f"{API}/orgs/{source['org']}/repos?per_page=100&type=all", headers))
 
 
+def _cache_get(path, stamp):
+    if not path.exists():
+        return None
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return data["value"] if data.get("stamp") == stamp else None
+
+
+def _cache_put(path, stamp, value) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({"stamp": stamp, "value": value}, sort_keys=True), encoding="utf-8")
+
+
 def check(source: dict, http) -> str:
     data, _ = http.get(f"{API}/user", _headers(source))
     return f"authenticated as {data.get('login')}"
@@ -63,6 +75,7 @@ def check(source: dict, http) -> str:
 
 def capture(ctx: Context, http) -> dict:
     h = _headers(ctx.source)
+    history = ctx.source.get("commit_history", True)
     start, end = capture_window(ctx.fy)
     ctx.raw_dir.mkdir(parents=True, exist_ok=True)
     counts, files = {"repos": 0, "pulls": 0, "commits": 0}, []
@@ -79,24 +92,42 @@ def capture(ctx: Context, http) -> dict:
                 if pr["created_at"][:10] <= end.isoformat():
                     pulls.append(pr)
             url = None if stop else _next(hdrs)
+        # Cache each PR's details and each branch's commits as they arrive, so an interrupted capture of a large
+        # repo resumes where it stopped. Entries are reused only while the PR's updated_at or the branch head is unchanged.
+        cache = ctx.raw_dir / ".cache" / full.replace("/", "__")
         for pr in pulls:
             n = pr["number"]
-            pr["_reviews"] = _paged(http, f"{base}/pulls/{n}/reviews?per_page=100", h)
-            pr["_review_comments"] = _paged(http, f"{base}/pulls/{n}/comments?per_page=100", h)
-            pr["_issue_comments"] = _paged(http, f"{base}/issues/{n}/comments?per_page=100", h)
-            pr["_commits"] = _paged(http, f"{base}/pulls/{n}/commits?per_page=100", h)
-            pr["_files"] = [f["filename"] for f in _paged(http, f"{base}/pulls/{n}/files?per_page=100", h)]
-        # Every branch, not just the default: abandoned experiments often never get a PR.
+            cached = _cache_get(cache / f"pr_{n}.json", pr["updated_at"])
+            if cached is None:
+                cached = {
+                    "_reviews": _paged(http, f"{base}/pulls/{n}/reviews?per_page=100", h),
+                    "_review_comments": _paged(http, f"{base}/pulls/{n}/comments?per_page=100", h),
+                    "_issue_comments": _paged(http, f"{base}/issues/{n}/comments?per_page=100", h),
+                    "_commits": _paged(http, f"{base}/pulls/{n}/commits?per_page=100", h) if history else [],
+                    "_files": [f["filename"] for f in _paged(http, f"{base}/pulls/{n}/files?per_page=100", h)],
+                }
+                _cache_put(cache / f"pr_{n}.json", pr["updated_at"], cached)
+            pr.update(cached)
+        # Every branch, not just the default: abandoned experiments often never get a PR. With commit_history = false
+        # the commit record comes from a git-log source on local clones instead (far cheaper for large repos).
         commits, seen = [], set()
         try:
-            branches = [b["name"] for b in _paged(http, f"{base}/branches?per_page=100", h)]
+            branches = _paged(http, f"{base}/branches?per_page=100", h) if history else []
         except HttpError as exc:
             if "HTTP 409" not in str(exc):  # 409 = empty repository
                 raise
             branches = []
-        for branch in branches:
-            sha = urllib.parse.quote(branch, safe="")
-            for cm in _paged(http, f"{base}/commits?sha={sha}&since={start.isoformat()}T00:00:00Z&until={end.isoformat()}T23:59:59Z&per_page=100", h):
+        window = f"{start.isoformat()}..{end.isoformat()}"
+        for b in branches:
+            branch, head = b["name"], (b.get("commit") or {}).get("sha")
+            key = cache / "branches" / f"{urllib.parse.quote(branch, safe='')}.json"
+            listed = _cache_get(key, f"{head}@{window}") if head else None
+            if listed is None:
+                listed = _paged(http, f"{base}/commits?sha={urllib.parse.quote(branch, safe='')}&since={start.isoformat()}T00:00:00Z"
+                                      f"&until={end.isoformat()}T23:59:59Z&per_page=100", h)
+                if head:
+                    _cache_put(key, f"{head}@{window}", listed)
+            for cm in listed:
                 if cm["sha"] not in seen:
                     seen.add(cm["sha"])
                     commits.append({**cm, "_branch": branch})

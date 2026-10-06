@@ -90,11 +90,12 @@ def test_section_a_rules(cfg):
     assert {"M-L06", "M-L07", "M-L10"} <= {f.rule for f in run(cfg, text(a=a))[0]}
 
 
-def test_start_before_fiscal_year_requires_continuation(cfg):
+def test_first_claim_starting_before_fiscal_year_is_a_warning(cfg):
     a = (SECTION_A.replace("2026-09-02", "2026-05-01").replace("- 208 Continuation: yes", "- 208 Continuation: no")
          .replace("- 210 First claim: no", "- 210 First claim: yes"))
     findings, _ = run(cfg, text(a=a))
-    assert any(f.severity == "error" and "requires Line 208" in f.message for f in findings)
+    hits = [f for f in findings if "never claimed" in f.message]
+    assert [f.severity for f in hits] == ["warning"]  # a project begun in an unclaimed earlier year keeps its real start
 
 
 def test_late_dates_and_missing_contractor_statement(cfg):
@@ -127,3 +128,9 @@ def test_cli_reports_counts_and_exit_code(make_claim, capsys):
     assert "Line 242: 16/350 words" in out and "0 errors" in out
     (d / "narrative.md").write_text(text(l242=" ".join(["word"] * 351)))
     assert check.main(["narrative", str(d / "narrative.md")]) == 1
+
+
+def test_company_scoped_wording_in_242_is_flagged_low(cfg):
+    l242 = "It was uncertain whether the sampler could keep success above the baseline under our constraints [C1]."
+    hits = [f for f in run(cfg, text(l242=l242))[0] if f.rule == "M-W15b"]
+    assert [(f.where, f.severity) for f in hits] == [("242", "info")]

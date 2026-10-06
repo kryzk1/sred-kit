@@ -1,6 +1,7 @@
 """Minimal JSON-over-HTTP client with retries. Tests replace it with a fake."""
 from __future__ import annotations
 
+import http.client
 import json
 import time
 import urllib.error
@@ -44,11 +45,13 @@ class Http:
                     self.sleep(min(wait, 900.0))
                     continue
                 raise HttpError(f"{method} {url} -> HTTP {exc.code}: {body.decode(errors='replace')[:500]}") from exc
-            except urllib.error.URLError as exc:
+            except (urllib.error.URLError, OSError, http.client.HTTPException) as exc:
+                # Transient network failures (resets, timeouts, dropped connections) are retried with backoff;
+                # one of them must not end a capture that has been running for hours.
                 if attempt < 5:
                     self.sleep(2.0 ** attempt)
                     continue
-                raise HttpError(f"{method} {url} -> {exc.reason}") from exc
+                raise HttpError(f"{method} {url} -> {getattr(exc, 'reason', exc)}") from exc
         raise HttpError(f"{method} {url} -> gave up after retries")
 
     def get(self, url, headers=None):

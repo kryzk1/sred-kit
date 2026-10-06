@@ -27,7 +27,7 @@ def routes():
         ("GET", f"{API}/pulls/7/commits", [{"sha": SHA1, "author": {"login": "achen"}, "html_url": "u1",
                                            "commit": {"message": "Sample grasps by visibility\n\nACME-12", "author": {"date": "2026-09-02T09:00:00Z", "email": "alice@acme.test"}}}], {}),
         ("GET", f"{API}/pulls/7/files", [{"filename": "planner/occlusion.py"}], {}),
-        ("GET", f"{API}/branches", [{"name": "main"}], {}),
+        ("GET", f"{API}/branches", [{"name": "main", "commit": {"sha": "head1"}}], {}),
         ("GET", f"{API}/commits?sha=main&", [
             {"sha": SHA1, "author": None, "commit": {"message": "dup", "author": {"date": "2026-09-02T09:00:00Z", "email": "alice@acme.test"}}},
             {"sha": SHA2, "author": None, "commit": {"message": "Direct commit", "author": {"date": "2026-10-01T09:00:00Z", "email": "bob@acme.test"}}},
@@ -79,3 +79,37 @@ def test_check_source_variants(tmp_path, fake_http, monkeypatch):
     ok, msg = capture.check_source(tmp_path, {"name": "g", "method": "git-log", "paths": ["nope"]}, http)
     assert not ok and "nope" in msg
     assert capture.check_source(tmp_path, {"name": "n", "method": "connector"}, http)[0]
+
+
+def test_check_source_accepts_captured_api_source_without_access(tmp_path, fake_http, monkeypatch):
+    from sredlib import manifest
+
+    monkeypatch.delenv("GITLAB_TOKEN", raising=False)
+    raw = tmp_path / "evidence/raw/gl/x.json"
+    raw.parent.mkdir(parents=True)
+    raw.write_text("{}")
+    manifest.record(tmp_path, "gl", method="api", files=[raw], counts={})
+    ok, msg = capture.check_source(tmp_path, {"name": "gl", "method": "api", "tool": "gitlab", "projects": ["a/b"]}, fake_http([]))
+    assert ok and "already captured" in msg
+
+
+def test_rerun_reuses_cached_pr_details_and_branch_commits(tmp_path, fake_http, monkeypatch):
+    """A capture interrupted after hours resumes cheaply: only the list endpoints are called again."""
+    monkeypatch.setenv("GITHUB_TOKEN", "t")
+    ctx = ctx_for(tmp_path)
+    get_adapter("github").capture(ctx, fake_http(routes()))
+    lists_only = [r for r in routes() if "/pulls?state=all" in r[1] or r[1].endswith("/branches")]
+    assert get_adapter("github").capture(ctx, fake_http(lists_only)) == {"repos": 1, "pulls": 1, "commits": 2}
+    rows = {r["key"] for r in get_adapter("github").normalize(ctx)}
+    assert "acme/vision#7:review:91" in rows and SHA2 in rows
+
+
+def test_commit_history_off_leaves_commits_to_git_log(tmp_path, fake_http, monkeypatch):
+    """Paired with a git-log source, the API capture skips the branch walk and PR commits (no duplicates)."""
+    monkeypatch.setenv("GITHUB_TOKEN", "t")
+    src = {"name": "gh", "kind": "code", "tool": "github", "method": "api", "org": "acme", "repos": ["vision"], "commit_history": False}
+    ctx = Context(tmp_path, src, FY, RESOLVER, (r"[A-Z]+-\d+",))
+    no_commits = [r for r in routes() if "commits" not in r[1].split("?")[0].rsplit("/", 1)[-1] and not r[1].endswith("/branches")]
+    assert get_adapter("github").capture(ctx, fake_http(no_commits)) == {"repos": 1, "pulls": 1, "commits": 0}
+    kinds = {r["kind"] for r in get_adapter("github").normalize(ctx)}
+    assert "commit" not in kinds and "pr_review" in kinds

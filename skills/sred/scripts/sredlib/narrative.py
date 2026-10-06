@@ -184,7 +184,8 @@ def check_narrative(n: Narrative, evidence: list[dict], cfg: dict, patterns: lis
         if d202 > end:
             add("error", "STRUCT", "A", "start date is after the fiscal year end")
         if d202 < start and not cont:
-            add("error", "STRUCT", "A", "a start date before the fiscal year requires Line 208 (continuation)")
+            add("warning", "STRUCT", "A", "first claim starting before the fiscal year: correct only if the project began in an "
+                "earlier year that was never claimed; confirm no prior filing covers it")
         if first:
             for prior in claim.get("prior_projects") or []:
                 pend = prior.get("end")

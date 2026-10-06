@@ -8,11 +8,11 @@ provinces = []            # e.g. ["BC"]
 timezone = ""             # IANA name, e.g. "America/Toronto"; blank = UTC
 
 [fiscal_year]
-start = 2026-08-01
-end = 2027-07-31
+start = ""                # unquoted TOML date once known, e.g. 2026-08-01
+end = ""
 
 [claim]
-first_claim = false       # true if the company has never claimed SR&ED
+first_claim = ""          # true or false: has the company never claimed SR&ED?
 prior_filings = []        # prior T661 Part 2 PDFs, e.g. ["prior/FY2026-T661-Part2.pdf"]
 prior_titles = []         # project titles exactly as filed before (Line 200)
 field_codes = []          # field-of-science codes filed before (Line 206)
@@ -34,6 +34,7 @@ government_assistance = ""
 client_contract_work = ""
 funded_by_others = ""
 work_outside_canada = ""
+collaboration = ""        # work done jointly with other businesses (Line 218)
 
 [payroll]
 total_wages_earned = 0.0  # employees' earned wages for the fiscal year from payroll (no contractors)

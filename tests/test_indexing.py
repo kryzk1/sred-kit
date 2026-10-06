@@ -58,3 +58,15 @@ def test_cli_build_and_validate(make_claim, capsys):
     assert "capture.py github" in capsys.readouterr().err
     assert index.main(["validate", "--claim", str(claim)]) == 1
     assert "run index.py build" in capsys.readouterr().out
+
+
+def test_rows_without_an_actor_are_not_counted_as_unmatched_people(make_claim):
+    claim = make_claim('[[sources]]\nname = "notes"\nkind = "docs"\ntool = "notion"\nmethod = "connector"\n', roster=[])
+    page = claim / "evidence/raw/notes/p.json"
+    page.parent.mkdir(parents=True)
+    page.write_text("{}")
+    activity.write_rows(claim / "evidence/raw/notes/rows.csv", [activity.make_row(
+        source="notes", key="p:1", kind="doc_edit", person="unmatched:", actor_raw="", ts=datetime(2026, 9, 9, tzinfo=timezone.utc),
+        raw_path="evidence/raw/notes/p.json")])
+    summary = indexing.build(config.load_config(claim / "sred.toml"), claim)
+    assert (summary["unmatched"], summary["no_actor"]) == (0, 1)
