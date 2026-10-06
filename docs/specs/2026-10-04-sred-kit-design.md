@@ -137,7 +137,7 @@ Each phase has a reference file loaded only when that phase runs. Phase 6 can ru
 
 ### Phase 1: Onboarding and setup
 
-A guided interview that collects everything later phases need, so nothing stalls mid-run for missing information. Triggered by "set up a new SR&ED claim" or `/sred setup` in an empty folder.
+A guided interview that collects everything later phases need, so nothing stalls mid-run for missing information. Triggered by "set up a new SR&ED claim" (or `/sred-kit:sred`) in an empty folder.
 
 **How it runs**
 - Questions come in five short batches (below). Choices use multiple-choice prompts; everything else is free text.

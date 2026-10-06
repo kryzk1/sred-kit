@@ -1,5 +1,6 @@
 {
   "name": "sred-kit",
   "version": "0.1.0",
-  "description": "Turn a finished fiscal year into an SR&ED handoff package: T661 Part 2 narratives and an evidence-backed labour summary."
+  "description": "Turn a finished fiscal year into an SR&ED handoff package: T661 Part 2 narratives and an evidence-backed labour summary.",
+  "license": "MIT"
 }
