@@ -57,6 +57,8 @@ def cmd_build(args) -> int:
     for name, n in summary["sources"].items():
         print(f"{name}: {n} rows")
     print(f"activity.csv: {summary['rows']} rows, {summary['unmatched']} with unmatched people (see identities_unmatched.csv)")
+    if summary["no_actor"]:
+        print(f"{summary['no_actor']} rows name no person in the source (e.g. unassigned issues); they are kept as evidence but not counted in anyone's time")
     for w in summary["warnings"]:
         print(f"WARNING: {w}")
     return 0

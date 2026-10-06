@@ -122,7 +122,8 @@ def build(cfg: dict, claim_dir: Path) -> dict:
     activity.write_rows(index_dir / "activity.csv", all_rows)
     write_unmatched(index_dir / "identities_unmatched.csv", all_rows)
     summary["rows"] = len(all_rows)
-    summary["unmatched"] = sum(1 for r in all_rows if r["person"].startswith("unmatched:"))
+    summary["unmatched"] = sum(1 for r in all_rows if r["person"].startswith("unmatched:") and r["actor_raw"])
+    summary["no_actor"] = sum(1 for r in all_rows if r["person"].startswith("unmatched:") and not r["actor_raw"])
     return summary
 
 
