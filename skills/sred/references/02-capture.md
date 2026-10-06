@@ -17,6 +17,8 @@ Capture the source whose access ends first (`subscription_end`), and Slack free 
 
 A tool with no preset: write a mapping file (see `adding-a-source.md`).
 
+Large GitHub repos: the API capture walks every branch (one or more calls per branch). If you have local clones, set `commit_history = false` on the GitHub source and add a `git-log` source for commits; the API then fetches only PR discussions and reviews. An interrupted GitHub capture resumes from its cache when re-run.
+
 ## Build and check
 
 1. `python3 <skill-dir>/scripts/index.py build --claim .` converts every source into `evidence/index/activity.csv`. A source that was configured but never captured stops the build with the exact `capture.py` command to run.
